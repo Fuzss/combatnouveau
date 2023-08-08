@@ -15,11 +15,6 @@ public class ForgeAbstractions implements CommonAbstractions {
     }
 
     @Override
-    public double adjustPickRange(double pickRange, Player player) {
-        return Math.max(CommonAbstractions.super.adjustPickRange(pickRange, player), player.getEntityReach());
-    }
-
-    @Override
     public AABB getSweepHitBox(Player player, Entity target) {
         return player.getItemInHand(InteractionHand.MAIN_HAND).getSweepHitBox(player, target);
     }

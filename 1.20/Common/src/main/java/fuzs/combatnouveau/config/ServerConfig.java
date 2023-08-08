@@ -43,8 +43,6 @@ public class ServerConfig implements ConfigCore {
     @Config(description = {"Delay in ticks between attacks when holding the attack button is enabled.", "This basically also puts a cap on the max spam clicking speed."})
     @Config.IntRange(min = 0)
     public int holdAttackButtonDelay = 5;
-    @Config(description = "Hit mobs through blocks without a collision shape such as tall grass without having to break the block first.")
-    public boolean swingThroughGrass = true;
     @Config(category = "items", description = "Increase snowball and egg stack size from 16 to 64, and potion stack size from 1 to 16 (only for potions of the same type of course).")
     public boolean increaseStackSize = true;
     @Config(category = "items", description = "Add a delay of 4 ticks between throwing snowballs or eggs, just like with ender pearls.")
