@@ -28,11 +28,11 @@ abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "blockedByShield", at = @At("HEAD"), cancellable = true)
     protected void blockedByShield(LivingEntity target, CallbackInfo callback) {
-        if (CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.shieldKnockback == ServerConfig.ShieldKnockback.NONE) return;
+        if (CombatNouveau.CONFIG.get(ServerConfig.class).shieldKnockback == ServerConfig.ShieldKnockback.NONE) return;
         double knockBackStrength;
-        if (CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.shieldKnockback == ServerConfig.ShieldKnockback.VARIABLE) {
-            int variableShieldKnockbackDelay = CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.variableShieldKnockbackDelay;
-            if (!CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.noShieldDelay) variableShieldKnockbackDelay += 5;
+        if (CombatNouveau.CONFIG.get(ServerConfig.class).shieldKnockback == ServerConfig.ShieldKnockback.VARIABLE) {
+            int variableShieldKnockbackDelay = CombatNouveau.CONFIG.get(ServerConfig.class).variableShieldKnockbackDelay;
+            if (!CombatNouveau.CONFIG.get(ServerConfig.class).removeShieldDelay) variableShieldKnockbackDelay += 5;
             knockBackStrength = (target.getUseItem().getUseDuration() - target.getUseItemRemainingTicks()) / (double) variableShieldKnockbackDelay;
             knockBackStrength = 1.0 - Mth.clamp(knockBackStrength, 0.0, 1.0);
             knockBackStrength += 0.5;
@@ -54,7 +54,7 @@ abstract class LivingEntityMixin extends Entity {
         Vec3 viewVector = this.getViewVector(1.0F);
         Vec3 vec3 = sourcePosition.vectorTo(this.position()).normalize();
         vec3 = new Vec3(vec3.x, 0.0, vec3.z);
-        double protectionArc = -Math.cos(CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.shieldProtectionArc * Math.PI * 0.5 / 180.0);
+        double protectionArc = -Math.cos(CombatNouveau.CONFIG.get(ServerConfig.class).shieldProtectionArc * Math.PI * 0.5 / 180.0);
         callback.setReturnValue(vec3.dot(viewVector) < protectionArc);
     }
 }

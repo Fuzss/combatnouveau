@@ -20,7 +20,7 @@ import net.minecraft.world.level.Level;
 public class CombatTestHandler {
     
     public static void onStartPlayerTick(Player player) {
-        if (!CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.fastSwitching) return;
+        if (!CombatNouveau.CONFIG.get(ServerConfig.class).fastSwitching) return;
         // switching items no longer triggers the attack cooldown
         ItemStack stack = player.getMainHandItem();
         if (!ItemStack.matches(((PlayerAccessor) player).goldenagecombat$getLastItemInMainHand(), stack)) {
@@ -29,18 +29,18 @@ public class CombatTestHandler {
     }
 
     public static EventResult onUseItemStart(LivingEntity entity, ItemStack stack, MutableInt remainingUseDuration) {
-        if (CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.noShieldDelay && stack.getUseAnimation() == UseAnim.BLOCK) {
+        if (CombatNouveau.CONFIG.get(ServerConfig.class).removeShieldDelay && stack.getUseAnimation() == UseAnim.BLOCK) {
             // remove shield activation delay
             remainingUseDuration.accept(stack.getUseDuration() - 5);
         }
-        if (CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.fastDrinking && stack.getUseAnimation() == UseAnim.DRINK) {
+        if (CombatNouveau.CONFIG.get(ServerConfig.class).fastDrinking && stack.getUseAnimation() == UseAnim.DRINK) {
             remainingUseDuration.accept(20);
         }
         return EventResult.PASS;
     }
 
     public static EventResultHolder<InteractionResultHolder<ItemStack>> onUseItem(Player player, Level level, InteractionHand hand) {
-        if (!CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.throwablesDelay) return EventResultHolder.pass();
+        if (!CombatNouveau.CONFIG.get(ServerConfig.class).throwablesDelay) return EventResultHolder.pass();
         ItemStack itemInHand = player.getItemInHand(hand);
         if (itemInHand.getItem() instanceof SnowballItem || itemInHand.getItem() instanceof EggItem) {
             // add delay after using an item
@@ -50,13 +50,13 @@ public class CombatTestHandler {
     }
 
     public static EventResult onLivingHurt(LivingEntity entity, DamageSource source, MutableFloat amount) {
-        if (CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.eatingInterruption) {
+        if (CombatNouveau.CONFIG.get(ServerConfig.class).eatingInterruption) {
             UseAnim useAction = entity.getUseItem().getUseAnimation();
             if (useAction == UseAnim.EAT || useAction == UseAnim.DRINK) {
                 entity.stopUsingItem();
             }
         }
-        if (CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.noProjectileImmunity) {
+        if (CombatNouveau.CONFIG.get(ServerConfig.class).noProjectileImmunity) {
             if (source.is(DamageTypeTags.IS_PROJECTILE)) {
                 // immediately reset damage immunity after being hit by any projectile, fixes multishot
                 entity.invulnerableTime = 0;
@@ -66,7 +66,7 @@ public class CombatTestHandler {
     }
 
     public static void setMaxStackSize(ServerConfig serverConfig) {
-        if (!serverConfig.combatTests.increaseStackSize) return;
+        if (!serverConfig.increaseStackSize) return;
         ((ItemAccessor) Items.SNOWBALL).goldenagecombat$setMaxStackSize(64);
         ((ItemAccessor) Items.EGG).goldenagecombat$setMaxStackSize(64);
         ((ItemAccessor) Items.POTION).goldenagecombat$setMaxStackSize(16);

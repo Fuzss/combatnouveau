@@ -16,6 +16,7 @@
     "accessor.PlayerAccessor"
   ],
   "client": [
+    "client.GameRendererMixin",
     "client.LivingEntityMixin",
     "client.MinecraftMixin",
     "client.accessor.MinecraftAccessor",

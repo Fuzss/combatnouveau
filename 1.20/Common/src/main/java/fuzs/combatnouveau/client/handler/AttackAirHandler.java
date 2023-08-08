@@ -21,17 +21,17 @@ public class AttackAirHandler {
     }
 
     public static void resetMissTime() {
-        if (!CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.holdAttackButton) return;
+        if (!CombatNouveau.CONFIG.get(ServerConfig.class).holdAttackButton) return;
         final Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.gameMode.hasMissTime()) {
-            ((MinecraftAccessor) minecraft).goldenagecombat$setMissTime(CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.holdAttackButtonDelay);
+            ((MinecraftAccessor) minecraft).goldenagecombat$setMissTime(CombatNouveau.CONFIG.get(ServerConfig.class).holdAttackButtonDelay);
         }
     }
 
     public static EventResult onAttackInteraction(Minecraft minecraft, LocalPlayer player) {
         if (minecraft.hitResult.getType() != HitResult.Type.BLOCK) {
             // cancel attack when attack cooldown is not completely recharged
-            if (minecraft.player.getAttackStrengthScale(0.5F) < CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.minAttackStrength) {
+            if (minecraft.player.getAttackStrengthScale(0.5F) < CombatNouveau.CONFIG.get(ServerConfig.class).minAttackStrength) {
                 return EventResult.INTERRUPT;
             }
         }
@@ -43,14 +43,14 @@ public class AttackAirHandler {
     }
 
     public static void onLeftClickEmpty() {
-        if (CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.airSweepAttack) {
-            if (CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.continuousAirSweeping || airSweepTime <= 0) {
+        if (CombatNouveau.CONFIG.get(ServerConfig.class).airSweepAttack) {
+            if (CombatNouveau.CONFIG.get(ServerConfig.class).continuousAirSweeping || airSweepTime <= 0) {
                 final Minecraft minecraft = Minecraft.getInstance();
                 ((MultiPlayerGameModeAccessor) minecraft.gameMode).goldenagecombat$callEnsureHasSentCarriedItem();
                 CombatNouveau.NETWORK.sendToServer(new ServerboundSweepAttackMessage((minecraft.player).isShiftKeyDown()));
             }
             // one more than auto-attacking to prevent both from working together as it would be too op
-            airSweepTime = CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.holdAttackButtonDelay + 1;
+            airSweepTime = CombatNouveau.CONFIG.get(ServerConfig.class).holdAttackButtonDelay + 1;
         }
         // need to set this again here as miss time is set to 10 by vanilla in case of an actual miss
         resetMissTime();

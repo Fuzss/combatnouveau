@@ -1,5 +1,6 @@
 package fuzs.combatnouveau;
 
+import fuzs.combatnouveau.data.ModLanguageProvider;
 import fuzs.puzzleslib.api.core.v1.ModConstructor;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -23,9 +24,6 @@ public class CombatNouveauForge {
 
     @SubscribeEvent
     public static void onGatherData(final GatherDataEvent evt) {
-        final DataGenerator dataGenerator = evt.getGenerator();
-        final PackOutput packOutput = dataGenerator.getPackOutput();
-        final CompletableFuture<HolderLookup.Provider> lookupProvider = evt.getLookupProvider();
-        final ExistingFileHelper fileHelper = evt.getExistingFileHelper();
+        evt.getGenerator().addProvider(true, new ModLanguageProvider(evt, CombatNouveau.MOD_ID));
     }
 }

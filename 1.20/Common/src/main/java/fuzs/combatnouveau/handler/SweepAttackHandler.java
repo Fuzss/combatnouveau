@@ -60,10 +60,10 @@ public class SweepAttackHandler {
     }
 
     public static boolean checkSweepAttack(Player player) {
-        if (CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.noSneakSweeping && player.isShiftKeyDown()) {
+        if (CombatNouveau.CONFIG.get(ServerConfig.class).noSweepingWhenSneaking && player.isShiftKeyDown()) {
             return false;
         }
-        if (CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.sweepingRequired) {
+        if (CombatNouveau.CONFIG.get(ServerConfig.class).requireSweepingEdge) {
             return EnchantmentHelper.getSweepingDamageRatio(player) > 0.0f;
         }
         ItemStack itemInHand = player.getItemInHand(InteractionHand.MAIN_HAND);

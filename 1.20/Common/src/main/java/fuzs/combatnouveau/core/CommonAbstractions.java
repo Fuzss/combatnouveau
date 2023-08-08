@@ -23,5 +23,9 @@ public interface CommonAbstractions {
         return attackReach;
     }
 
+    default double adjustPickRange(double pickRange, Player player) {
+        return pickRange;
+    }
+
     AABB getSweepHitBox(Player player, Entity target);
 }

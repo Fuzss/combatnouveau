@@ -21,9 +21,9 @@ public class GameRendererPickHelper {
     }
 
     public static HitResult pick(Entity entity, double pickRange, float partialTicks) {
-        Vec3 vec3 = entity.getEyePosition(partialTicks);
-        Vec3 vec31 = entity.getViewVector(partialTicks);
-        Vec3 vec32 = vec3.add(vec31.x * pickRange, vec31.y * pickRange, vec31.z * pickRange);
-        return entity.level().clip(new ClipContext(vec3, vec32, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
+        Vec3 eyePosition = entity.getEyePosition(partialTicks);
+        Vec3 viewVector = entity.getViewVector(partialTicks);
+        Vec3 vec3 = eyePosition.add(viewVector.x * pickRange, viewVector.y * pickRange, viewVector.z * pickRange);
+        return entity.level().clip(new ClipContext(eyePosition, vec3, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
     }
 }

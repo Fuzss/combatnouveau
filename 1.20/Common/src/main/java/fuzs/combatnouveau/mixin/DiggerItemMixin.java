@@ -19,7 +19,7 @@ abstract class DiggerItemMixin extends TieredItem {
 
     @Inject(method = "hurtEnemy", at = @At("HEAD"), cancellable = true)
     public void hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker, CallbackInfoReturnable<Boolean> callback) {
-        if (!AxeItem.class.isInstance(this) || !CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.noAxeAttackPenalty) return;
+        if (!AxeItem.class.isInstance(this) || !CombatNouveau.CONFIG.get(ServerConfig.class).noAxeAttackPenalty) return;
         stack.hurtAndBreak(1, attacker, (livingEntity) -> {
             livingEntity.broadcastBreakEvent(EquipmentSlot.MAINHAND);
         });

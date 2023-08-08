@@ -1,5 +1,6 @@
 package fuzs.combatnouveau.handler;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
 import fuzs.combatnouveau.CombatNouveau;
 import fuzs.combatnouveau.config.ServerConfig;
@@ -23,19 +24,20 @@ public class AttackAttributeHandler {
     private static final String ATTACK_DAMAGE_MODIFIER_NAME = CombatNouveau.id("attack_damage_modifier").toString();
     private static final String ATTACK_SPEED_MODIFIER_NAME = CombatNouveau.id("attack_speed_modifier").toString();
     private static final String ATTACK_RANGE_MODIFIER_NAME = CombatNouveau.id("attack_range_modifier").toString();
-    private static final Map<Class<?>, Double> ATTACK_RANGE_BONUS_OVERRIDES = Map.of(TridentItem.class, 0.5, HoeItem.class, 0.5, SwordItem.class, 0.5, TieredItem.class, 0.5);
+    private static final Map<Class<?>, Double> ATTACK_RANGE_BONUS_OVERRIDES = ImmutableMap.of(TridentItem.class, 1.0, HoeItem.class, 1.0, SwordItem.class, 0.5, TieredItem.class, 0.0);
 
     public static void onItemAttributeModifiers(ItemStack stack, EquipmentSlot equipmentSlot, Multimap<Attribute, AttributeModifier> attributeModifiers, Multimap<Attribute, AttributeModifier> originalAttributeModifiers) {
         if (!CombatNouveau.CONFIG.getHolder(ServerConfig.class).isAvailable()) return;
         // don't change items whose attributes have already been changed via the nbt tag
         if (equipmentSlot == EquipmentSlot.MAINHAND && (!stack.hasTag() || !stack.getTag().contains("AttributeModifiers", Tag.TAG_LIST))) {
-            trySetNewAttributeValue(stack, attributeModifiers, Attributes.ATTACK_DAMAGE, BASE_ATTACK_DAMAGE_UUID, ATTACK_DAMAGE_MODIFIER_NAME, CombatNouveau.CONFIG.get(ServerConfig.class).attributes.attackDamageOverrides);
-            trySetNewAttributeValue(stack, attributeModifiers, Attributes.ATTACK_SPEED, BASE_ATTACK_SPEED_UUID, ATTACK_SPEED_MODIFIER_NAME, CombatNouveau.CONFIG.get(ServerConfig.class).attributes.attackSpeedOverrides);
-            if (!trySetNewAttributeValue(stack, attributeModifiers, CommonAbstractions.INSTANCE.getAttackRangeAttribute(), BASE_ATTACK_REACH_UUID, ATTACK_RANGE_MODIFIER_NAME, CombatNouveau.CONFIG.get(ServerConfig.class).attributes.attackReachOverrides)) {
-                if (CombatNouveau.CONFIG.get(ServerConfig.class).attributes.additionalAttackReach) {
+            trySetNewAttributeValue(stack, attributeModifiers, Attributes.ATTACK_DAMAGE, BASE_ATTACK_DAMAGE_UUID, ATTACK_DAMAGE_MODIFIER_NAME, CombatNouveau.CONFIG.get(ServerConfig.class).attackDamageOverrides);
+            trySetNewAttributeValue(stack, attributeModifiers, Attributes.ATTACK_SPEED, BASE_ATTACK_SPEED_UUID, ATTACK_SPEED_MODIFIER_NAME, CombatNouveau.CONFIG.get(ServerConfig.class).attackSpeedOverrides);
+            if (!trySetNewAttributeValue(stack, attributeModifiers, CommonAbstractions.INSTANCE.getAttackRangeAttribute(), BASE_ATTACK_REACH_UUID, ATTACK_RANGE_MODIFIER_NAME, CombatNouveau.CONFIG.get(ServerConfig.class).attackReachOverrides)) {
+                if (CombatNouveau.CONFIG.get(ServerConfig.class).additionalAttackReach) {
                     for (Map.Entry<Class<?>, Double> entry : ATTACK_RANGE_BONUS_OVERRIDES.entrySet()) {
                         if (entry.getKey().isInstance(stack.getItem())) {
                             setNewAttributeValue(attributeModifiers, CommonAbstractions.INSTANCE.getAttackRangeAttribute(), BASE_ATTACK_REACH_UUID, ATTACK_RANGE_MODIFIER_NAME, entry.getValue());
+                            break;
                         }
                     }
                 }

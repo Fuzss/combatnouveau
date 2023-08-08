@@ -27,7 +27,7 @@ abstract class FoodDataMixin {
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(Player player, CallbackInfo callback) {
-        if (!CombatNouveau.CONFIG.get(ServerConfig.class).classic.balancedFoodMechanics) return;
+        if (!CombatNouveau.CONFIG.get(ServerConfig.class).balancedFoodMechanics) return;
         Difficulty difficulty = player.level().getDifficulty();
         this.lastFoodLevel = this.foodLevel;
         if (this.exhaustionLevel > 4.0F) {

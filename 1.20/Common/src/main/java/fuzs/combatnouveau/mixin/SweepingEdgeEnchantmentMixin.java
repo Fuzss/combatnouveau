@@ -13,7 +13,7 @@ abstract class SweepingEdgeEnchantmentMixin {
 
     @Inject(method = "getSweepingDamageRatio", at = @At("TAIL"), cancellable = true)
     private static void getSweepingDamageRatio(int level, CallbackInfoReturnable<Float> callback) {
-        if (!CombatNouveau.CONFIG.get(ServerConfig.class).combatTests.halfSweepingDamage) return;
+        if (!CombatNouveau.CONFIG.get(ServerConfig.class).halfSweepingDamage) return;
         callback.setReturnValue(callback.getReturnValueF() * 0.5F);
     }
 }
