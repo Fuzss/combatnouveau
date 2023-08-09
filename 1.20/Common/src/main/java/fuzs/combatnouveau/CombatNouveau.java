@@ -3,13 +3,16 @@ package fuzs.combatnouveau;
 import fuzs.combatnouveau.config.ClientConfig;
 import fuzs.combatnouveau.config.ServerConfig;
 import fuzs.combatnouveau.handler.AttackAttributeHandler;
+import fuzs.combatnouveau.handler.ClassicCombatHandler;
 import fuzs.combatnouveau.handler.CombatTestHandler;
 import fuzs.combatnouveau.network.client.ServerboundSweepAttackMessage;
 import fuzs.combatnouveau.network.client.ServerboundSwingArmMessage;
 import fuzs.puzzleslib.api.config.v3.ConfigHolder;
 import fuzs.puzzleslib.api.core.v1.ModConstructor;
+import fuzs.puzzleslib.api.event.v1.entity.ProjectileImpactCallback;
 import fuzs.puzzleslib.api.event.v1.entity.living.ItemAttributeModifiersCallback;
 import fuzs.puzzleslib.api.event.v1.entity.living.LivingHurtCallback;
+import fuzs.puzzleslib.api.event.v1.entity.living.LivingKnockBackCallback;
 import fuzs.puzzleslib.api.event.v1.entity.living.UseItemEvents;
 import fuzs.puzzleslib.api.event.v1.entity.player.PlayerInteractEvents;
 import fuzs.puzzleslib.api.event.v1.entity.player.PlayerTickEvents;
@@ -28,11 +31,13 @@ public class CombatNouveau implements ModConstructor {
 
     @Override
     public void onConstructMod() {
-        regsiterHandlers();
+        registerHandlers();
     }
 
-    private static void regsiterHandlers() {
+    private static void registerHandlers() {
         ItemAttributeModifiersCallback.EVENT.register(AttackAttributeHandler::onItemAttributeModifiers);
+        LivingKnockBackCallback.EVENT.register(ClassicCombatHandler::onLivingKnockBack);
+        ProjectileImpactCallback.EVENT.register(ClassicCombatHandler::onProjectileImpact);
         PlayerInteractEvents.USE_ITEM.register(CombatTestHandler::onUseItem);
         UseItemEvents.START.register(CombatTestHandler::onUseItemStart);
         PlayerTickEvents.START.register(CombatTestHandler::onStartPlayerTick);

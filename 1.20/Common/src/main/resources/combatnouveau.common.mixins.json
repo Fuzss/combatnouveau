@@ -7,6 +7,7 @@
   "plugin": "fuzs.combatnouveau.mixin.ModMixinConfigPlugin",
   "mixins": [
     "DiggerItemMixin",
+    "EntityMixin",
     "FoodDataMixin",
     "LivingEntityMixin",
     "PlayerMixin",

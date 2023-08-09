@@ -16,6 +16,10 @@ public class ServerConfig implements ConfigCore {
     public boolean weakAttacksKnockBackPlayers = true;
     @Config(description = "Sprinting and attacking no longer interfere with each other, making critical hits possible at all times.")
     public boolean criticalHitsWhileSprinting = true;
+    @Config(description = "Expand all entity hitboxes by 10%, making hitting a target possible from a slightly greater range and with much increased accuracy.")
+    public boolean inflateHitboxes = true;
+    @Config(description = "Makes knockback stronger towards targets not on the ground (does not apply when in water).")
+    public boolean upwardsKnockback = true;
     @Config(category = "attributes", name = "attack_damage_overrides", description = {"Overrides for setting and balancing attack damage values of items.", "As with all items, this value is added on top of the default attack strength of the player (which is 1.0 by default).", "Format for every entry is \"<namespace>:<path>,<amount>\". Tags are supported, must be in the format of \"#<namespace>:<path>\". Namespace may be omitted to use \"minecraft\" by default. May use asterisk as wildcard parameter via pattern matching, e.g. \"minecraft:*_shulker_box\" to match all shulker boxes no matter of color."})
     List<String> attackDamageOverridesRaw = ConfigDataSet.toString(Registries.ITEM);
     @Config(category = "attributes", name = "attack_speed_overrides", description = {"Overrides for setting and balancing attack speed values of items.", "As with all items, this value is added on top of the default attack speed of the player (which is 4.0 by default).", "Format for every entry is \"<namespace>:<path>,<amount>\". Tags are supported, must be in the format of \"#<namespace>:<path>\". Namespace may be omitted to use \"minecraft\" by default. May use asterisk as wildcard parameter via pattern matching, e.g. \"minecraft:*_shulker_box\" to match all shulker boxes no matter of color."})
@@ -56,10 +60,10 @@ public class ServerConfig implements ConfigCore {
     @Config(category = "cooldown", description = "Attack cooldown is unaffected by switching hotbar items.")
     public boolean fastSwitching = true;
     @Config(category = "cooldown", description = "Melee attacks that don't hit a target won't trigger the attack cooldown.")
-    public boolean retainEnergyOnMiss = true;
+    public boolean retainEnergyOnMiss = false;
     @Config(category = "cooldown", description = {"Disable attacking when attack cooldown is below a certain percentage.", "Setting this to 0.0 means attacking is possible with any strength as in vanilla."})
     @Config.DoubleRange(min = 0.0, max = 1.0)
-    public double minAttackStrength = 0.0;
+    public double minAttackStrength = 1.0;
     @Config(description = "Disables damage immunity when hit by a projectile. Makes it possible for entities to be hit by multiple projectiles at once (useful for the multishot enchantment).")
     public boolean noProjectileImmunity = true;
     @Config(category = "shield", description = "Skip 5 tick warm-up delay when activating a shield, so they become effective instantly.")
