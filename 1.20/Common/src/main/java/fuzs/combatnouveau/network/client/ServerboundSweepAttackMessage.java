@@ -1,6 +1,6 @@
 package fuzs.combatnouveau.network.client;
 
-import fuzs.combatnouveau.handler.SweepAttackHandler;
+import fuzs.combatnouveau.helper.SweepAttackHelper;
 import fuzs.puzzleslib.api.network.v3.ServerMessageListener;
 import fuzs.puzzleslib.api.network.v3.ServerboundMessage;
 import net.minecraft.server.MinecraftServer;
@@ -20,7 +20,7 @@ public record ServerboundSweepAttackMessage(boolean usingSecondaryAction) implem
                 // mimics behavior of ServerboundInteractPacket as that one is used in combat tests
                 player.setShiftKeyDown(message.usingSecondaryAction);
                 if (player.gameMode.getGameModeForPlayer() != GameType.SPECTATOR) {
-                    SweepAttackHandler.attackAir(player);
+                    SweepAttackHelper.tryAttackAir(player);
                 }
             }
         };

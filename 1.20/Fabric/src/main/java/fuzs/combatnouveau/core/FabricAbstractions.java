@@ -14,11 +14,6 @@ public class FabricAbstractions implements CommonAbstractions {
     }
 
     @Override
-    public double getCurrentAttackReach(Player player, boolean hasFarPickRange) {
-        return CommonAbstractions.super.getCurrentAttackReach(player, hasFarPickRange) + 3.0;
-    }
-
-    @Override
     public AABB getSweepHitBox(Player player, Entity target) {
         return target.getBoundingBox().inflate(1.0, 0.25, 1.0);
     }

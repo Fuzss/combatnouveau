@@ -11,17 +11,5 @@ public interface CommonAbstractions {
 
     Attribute getAttackRangeAttribute();
 
-    default double getCurrentAttackReach(Player player, boolean hasFarPickRange) {
-        // TODO check this
-        double attackReach = player.getAttribute(CommonAbstractions.INSTANCE.getAttackRangeAttribute()).getValue();
-        if (hasFarPickRange) {
-            attackReach += 0.5;
-        }
-        if (player.isCrouching()) {
-            attackReach -= 0.5;
-        }
-        return attackReach;
-    }
-
     AABB getSweepHitBox(Player player, Entity target);
 }
