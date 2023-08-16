@@ -31,14 +31,14 @@
   },
 
   "mixins": [
-    "${modId}.common.mixins.json",
-    "${modId}.fabric.mixins.json"
+    "${modId}.common.mixins.json"
   ],
 
   "depends": {
     "fabricloader": ">=${minFabricVersion}",
     "fabric-api": ">=${minFabricApiVersion}",
     "puzzleslib": ">=${minPuzzlesVersion}",
+    "reach-entity-attributes": "*",
     "minecraft": "${minecraftVersion}",
     "java": ">=17"
   }
