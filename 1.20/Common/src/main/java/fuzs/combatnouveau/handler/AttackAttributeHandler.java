@@ -26,7 +26,7 @@ public class AttackAttributeHandler {
     private static final String ATTACK_RANGE_MODIFIER_NAME = CombatNouveau.id("attack_range_modifier").toString();
     public static final Map<Class<?>, Double> ATTACK_RANGE_BONUS_OVERRIDES = ImmutableMap.of(TridentItem.class, 1.0, HoeItem.class, 1.0, SwordItem.class, 0.5, TieredItem.class, 0.0);
 
-    public static void onItemAttributeModifiers(ItemStack stack, EquipmentSlot equipmentSlot, Multimap<Attribute, AttributeModifier> attributeModifiers, Multimap<Attribute, AttributeModifier> originalAttributeModifiers) {
+    public static void onItemAttributeModifiers(ItemStack stack, EquipmentSlot equipmentSlot, Multimap<Attribute, AttributeModifier> attributeModifiers) {
         if (!CombatNouveau.CONFIG.getHolder(ServerConfig.class).isAvailable()) return;
         // don't change items whose attributes have already been changed via the nbt tag
         if (equipmentSlot == EquipmentSlot.MAINHAND && (!stack.hasTag() || !stack.getTag().contains("AttributeModifiers", Tag.TAG_LIST))) {
