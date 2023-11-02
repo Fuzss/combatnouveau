@@ -25,18 +25,20 @@ import java.util.List;
 public class SweepAttackHelper {
 
     public static void tryAttackAir(Player player) {
-        double walkDist = player.walkDist - player.walkDistO;
-        if (!player.onGround() || !(walkDist < player.getSpeed())) return;
-        float attackDamage = (float) player.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
-        if (attackDamage > 0.0f && player.getAttackStrengthScale(0.5F) > 0.9F && canPerformSweepAttack(player)) {
-            double attackReach = getCurrentAttackReach(player, player.isCreative());
-            double moveX = (double) (-Mth.sin(player.getYRot() * ((float) Math.PI / 180))) * 2.0;
-            double moveZ = (double) Mth.cos(player.getYRot() * ((float) Math.PI / 180)) * 2.0;
-            AABB aABB = CommonAbstractions.INSTANCE.getSweepHitBox(player, player).move(moveX, 0.0, moveZ);
-            performSweepAttack(player, aABB, attackReach, attackDamage, null);
+        if (player.getAttackStrengthScale(0.5F) >= 1.0F) {
+            double walkDist = player.walkDist - player.walkDistO;
+            if (!player.onGround() || !(walkDist < player.getSpeed())) return;
+            float attackDamage = (float) player.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
+            if (attackDamage > 0.0f && player.getAttackStrengthScale(0.5F) > 0.9F && canPerformSweepAttack(player)) {
+                double attackReach = getCurrentAttackReach(player, player.isCreative());
+                double moveX = (double) (-Mth.sin(player.getYRot() * ((float) Math.PI / 180))) * 2.0;
+                double moveZ = (double) Mth.cos(player.getYRot() * ((float) Math.PI / 180)) * 2.0;
+                AABB aABB = CommonAbstractions.INSTANCE.getSweepHitBox(player, player).move(moveX, 0.0, moveZ);
+                performSweepAttack(player, aABB, attackReach, attackDamage, null);
+            }
+            // also resets attack ticker
+            player.swing(InteractionHand.MAIN_HAND);
         }
-        // also resets attack ticker
-        player.swing(InteractionHand.MAIN_HAND);
     }
 
     private static boolean canPerformSweepAttack(Player player) {

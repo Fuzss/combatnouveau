@@ -19,7 +19,6 @@
   "client": [
     "client.LivingEntityMixin",
     "client.MinecraftMixin",
-    "client.accessor.MinecraftAccessor",
     "client.accessor.MultiPlayerGameModeAccessor"
   ],
   "injectors": {

@@ -16,7 +16,7 @@ public record ServerboundSwingArmMessage(InteractionHand hand) implements Server
 
             @Override
             public void handle(ServerboundSwingArmMessage message, MinecraftServer server, ServerGamePacketListenerImpl handler, ServerPlayer player, ServerLevel level) {
-                player.swing(message.hand);
+                player.swing(message.hand, false);
             }
         };
     }

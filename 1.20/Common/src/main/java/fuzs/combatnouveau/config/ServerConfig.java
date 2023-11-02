@@ -36,15 +36,13 @@ public class ServerConfig implements ConfigCore {
     public boolean noSweepingWhenSneaking = false;
     @Config(category = "sweeping", description = {"Allow sweep attack without hitting mobs, just by attacking air basically.", "This attack will not work when the attack button is held for continuous attacking."})
     public boolean airSweepAttack = true;
-    @Config(category = "sweeping", description = "Allow sweep attacks to trigger without hitting a target even when attacking continuously by holding the attack button.")
-    public boolean continuousAirSweeping = true;
     @Config(description = "Attacking will no longer stop the player from sprinting. Very useful when swimming, so you can fight underwater without being stopped on every hit.")
     public boolean sprintAttacks = true;
     @Config(description = {"Force all entity hitboxes to have a cubic size of at least 0.9 blocks, making them easier to hit and shoot.", "This only affects targeting an entity, no collisions or whatsoever. Useful for hitting e.g. bats, rabbits, silverfish, fish, and most baby animals."})
     public boolean minHitboxSize = true;
-    @Config(description = "Holding down the attack button keeps attacking continuously. No more spam clicking required.")
+    @Config(category = "cooldown", description = "Holding down the attack button keeps attacking continuously. No more spam clicking required.")
     public boolean holdAttackButton = false;
-    @Config(description = {"Delay in ticks between attacks when holding the attack button is enabled.", "This basically also puts a cap on the max spam clicking speed."})
+    @Config(category = "cooldown", description = {"Delay in ticks between attacks when holding the attack button is enabled.", "This basically also puts a cap on the max spam clicking speed."})
     @Config.IntRange(min = 0)
     public int holdAttackButtonDelay = 5;
     @Config(category = "items", description = "Increase snowball and egg stack size from 16 to 64, and potion stack size from 1 to 16 (only for potions of the same type of course).")

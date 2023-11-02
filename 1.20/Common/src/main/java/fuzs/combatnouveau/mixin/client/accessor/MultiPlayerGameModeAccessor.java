@@ -8,5 +8,5 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface MultiPlayerGameModeAccessor {
 
     @Invoker("ensureHasSentCarriedItem")
-    void goldenagecombat$callEnsureHasSentCarriedItem();
+    void combatnouveau$callEnsureHasSentCarriedItem();
 }
