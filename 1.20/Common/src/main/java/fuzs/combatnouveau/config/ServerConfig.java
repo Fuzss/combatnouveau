@@ -81,9 +81,9 @@ public class ServerConfig implements ConfigCore {
 
     @Override
     public void afterConfigReload() {
-        this.attackDamageOverrides = ConfigDataSet.from(Registries.ITEM, this.attackDamageOverridesRaw, (i, o) -> ((double) o) >= 0.0, double.class);
-        this.attackSpeedOverrides = ConfigDataSet.from(Registries.ITEM, this.attackSpeedOverridesRaw, (i, o) -> ((double) o) >= 0.0, double.class);
-        this.attackReachOverrides = ConfigDataSet.from(Registries.ITEM, this.attackReachOverridesRaw, (i, o) -> ((double) o) >= 0.0, double.class);
+        this.attackDamageOverrides = ConfigDataSet.from(Registries.ITEM, this.attackDamageOverridesRaw, (i, o) -> i != 1 || ((double) o) >= 0.0, double.class);
+        this.attackSpeedOverrides = ConfigDataSet.from(Registries.ITEM, this.attackSpeedOverridesRaw, (i, o) -> i != 1 || ((double) o) >= 0.0, double.class);
+        this.attackReachOverrides = ConfigDataSet.from(Registries.ITEM, this.attackReachOverridesRaw, (i, o) -> i != 1 || ((double) o) >= 0.0, double.class);
         CombatTestHandler.setMaxStackSize(this);
     }
 
