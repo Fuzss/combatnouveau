@@ -1,0 +1,27 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_17",
+  "package": "fuzs.combatnouveau.mixin",
+  "refmap": "combatnouveau.refmap.json",
+  "plugin": "fuzs.combatnouveau.mixin.ModMixinConfigPlugin",
+  "mixins": [
+    "DiggerItemMixin",
+    "EntityMixin",
+    "FoodDataMixin",
+    "LivingEntityMixin",
+    "PlayerMixin",
+    "ProjectileUtilMixin",
+    "SweepingEdgeEnchantmentMixin",
+    "accessor.ItemAccessor",
+    "accessor.PlayerAccessor"
+  ],
+  "client": [
+    "client.LivingEntityMixin",
+    "client.MinecraftMixin",
+    "client.accessor.MultiPlayerGameModeAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
