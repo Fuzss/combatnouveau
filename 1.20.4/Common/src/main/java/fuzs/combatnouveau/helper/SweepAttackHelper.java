@@ -12,6 +12,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
@@ -53,8 +54,9 @@ public class SweepAttackHelper {
     }
 
     private static double getCurrentAttackReach(Player player, boolean hasFarPickRange) {
-        double attackReach = player.getAttribute(CommonAbstractions.INSTANCE.getAttackRangeAttribute()).getValue();
-        if (!ModLoaderEnvironment.INSTANCE.isForge()) attackReach += 3.0;
+        Attribute attackRangeAttribute = CommonAbstractions.INSTANCE.getAttackRangeAttribute();
+        double attackReach = player.getAttributes().hasAttribute(attackRangeAttribute) ? player.getAttribute(attackRangeAttribute).getValue() : 0.0;
+        if (!ModLoaderEnvironment.INSTANCE.getModLoader().isForgeLike()) attackReach += 3.0;
         if (hasFarPickRange) attackReach += 0.5;
         return attackReach;
     }

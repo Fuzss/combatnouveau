@@ -89,7 +89,7 @@ public class AttributesTooltipHandler {
         if (player != null) attributeAmount += player.getAttributeBaseValue(attribute);
         if (attribute == Attributes.ATTACK_DAMAGE)
             attributeAmount += EnchantmentHelper.getDamageBonus(stack, MobType.UNDEFINED);
-        if (attribute == CommonAbstractions.INSTANCE.getAttackRangeAttribute() && !ModLoaderEnvironment.INSTANCE.isForge())
+        if (attribute == CommonAbstractions.INSTANCE.getAttackRangeAttribute() && !ModLoaderEnvironment.INSTANCE.getModLoader().isForgeLike())
             attributeAmount += 3.0;
         if (attributeModifier.getOperation() == AttributeModifier.Operation.ADDITION) {
             if (attribute instanceof RangedAttribute rangedAttribute && rangedAttribute.getMaxValue() < 10.0) {

@@ -1,5 +1,6 @@
-package fuzs.combatnouveau;
+package fuzs.combatnouveau.forge;
 
+import fuzs.combatnouveau.CombatNouveau;
 import fuzs.puzzleslib.api.core.v1.ModConstructor;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

@@ -1,5 +1,6 @@
-package fuzs.combatnouveau;
+package fuzs.combatnouveau.fabric;
 
+import fuzs.combatnouveau.CombatNouveau;
 import fuzs.puzzleslib.api.core.v1.ModConstructor;
 import net.fabricmc.api.ModInitializer;
 

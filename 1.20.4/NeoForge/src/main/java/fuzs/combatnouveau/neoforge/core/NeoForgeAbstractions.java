@@ -1,17 +1,18 @@
-package fuzs.combatnouveau.core;
+package fuzs.combatnouveau.neoforge.core;
 
+import fuzs.combatnouveau.core.CommonAbstractions;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.ForgeMod;
+import net.neoforged.neoforge.common.NeoForgeMod;
 
-public class ForgeAbstractions implements CommonAbstractions {
+public class NeoForgeAbstractions implements CommonAbstractions {
 
     @Override
     public Attribute getAttackRangeAttribute() {
-        return ForgeMod.ENTITY_REACH.get();
+        return NeoForgeMod.ENTITY_REACH.value();
     }
 
     @Override

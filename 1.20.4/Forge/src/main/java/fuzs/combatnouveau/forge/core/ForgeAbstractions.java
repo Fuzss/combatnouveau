@@ -1,5 +1,6 @@
-package fuzs.combatnouveau.core;
+package fuzs.combatnouveau.forge.core;
 
+import fuzs.combatnouveau.core.CommonAbstractions;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attribute;

@@ -3,6 +3,7 @@ package fuzs.combatnouveau.config;
 import fuzs.puzzleslib.api.config.v3.Config;
 import fuzs.puzzleslib.api.config.v3.ConfigCore;
 import fuzs.puzzleslib.api.config.v3.serialization.ConfigDataSet;
+import fuzs.puzzleslib.api.config.v3.serialization.KeyedValueProvider;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -17,7 +18,7 @@ public class ClientConfig implements ConfigCore {
     @Config(description = "Show a shield indicator similar to the attack indicator when actively blocking.")
     public boolean shieldIndicator = true;
     @Config(name = "hidden_offhand_items", description = "Items that will not be rendered as being held in first person when placed in the offhand.")
-    List<String> hiddenOffhandItemsRaw = ConfigDataSet.toString(Registries.ITEM, Items.TOTEM_OF_UNDYING);
+    List<String> hiddenOffhandItemsRaw = KeyedValueProvider.toString(Registries.ITEM, Items.TOTEM_OF_UNDYING);
 
     public ConfigDataSet<Item> hiddenOffhandItems;
 

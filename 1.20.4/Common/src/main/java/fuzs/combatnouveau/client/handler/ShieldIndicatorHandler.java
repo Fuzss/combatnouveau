@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import fuzs.combatnouveau.CombatNouveau;
 import fuzs.combatnouveau.config.ClientConfig;
-import fuzs.puzzleslib.api.client.event.v1.RenderGuiElementEvents;
+import fuzs.puzzleslib.api.client.event.v1.renderer.RenderGuiElementEvents;
 import fuzs.puzzleslib.api.event.v1.core.EventResult;
 import net.minecraft.client.AttackIndicatorStatus;
 import net.minecraft.client.Minecraft;

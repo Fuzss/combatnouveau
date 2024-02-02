@@ -10,7 +10,7 @@ import fuzs.puzzleslib.api.event.v1.data.MutableFloat;
 import fuzs.puzzleslib.api.event.v1.data.MutableInt;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -39,7 +39,7 @@ public class CombatTestHandler {
         return EventResult.PASS;
     }
 
-    public static EventResultHolder<InteractionResultHolder<ItemStack>> onUseItem(Player player, Level level, InteractionHand hand) {
+    public static EventResultHolder<InteractionResult> onUseItem(Player player, Level level, InteractionHand hand) {
         if (!CombatNouveau.CONFIG.get(ServerConfig.class).throwablesDelay) return EventResultHolder.pass();
         ItemStack itemInHand = player.getItemInHand(hand);
         if (itemInHand.getItem() instanceof SnowballItem || itemInHand.getItem() instanceof EggItem) {

@@ -1,6 +1,7 @@
-package fuzs.combatnouveau.client;
+package fuzs.combatnouveau.forge.client;
 
 import fuzs.combatnouveau.CombatNouveau;
+import fuzs.combatnouveau.client.CombatNouveauClient;
 import fuzs.puzzleslib.api.client.core.v1.ClientModConstructor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
