@@ -1,13 +1,17 @@
 package fuzs.combatnouveau.handler;
 
 import fuzs.combatnouveau.CombatNouveau;
+import fuzs.combatnouveau.client.helper.UseItemFabricClientHelper;
 import fuzs.combatnouveau.config.ServerConfig;
+import fuzs.combatnouveau.helper.UseItemFabricHelper;
 import fuzs.combatnouveau.mixin.accessor.ItemAccessor;
 import fuzs.combatnouveau.mixin.accessor.PlayerAccessor;
+import fuzs.puzzleslib.api.core.v1.ModLoaderEnvironment;
 import fuzs.puzzleslib.api.event.v1.core.EventResult;
 import fuzs.puzzleslib.api.event.v1.core.EventResultHolder;
 import fuzs.puzzleslib.api.event.v1.data.MutableFloat;
 import fuzs.puzzleslib.api.event.v1.data.MutableInt;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -45,6 +49,16 @@ public class CombatTestHandler {
         if (itemInHand.getItem() instanceof SnowballItem || itemInHand.getItem() instanceof EggItem) {
             // add delay after using an item
             player.getCooldowns().addCooldown(itemInHand.getItem(), 4);
+            // the callback runs before cooldowns on Fabric, so we need to perform the interaction ourselves and cancel the callback
+            if (ModLoaderEnvironment.INSTANCE.getModLoader().isFabricLike()) {
+                InteractionResult result;
+                if (level.isClientSide) {
+                    result = UseItemFabricClientHelper.useItem(player, hand);
+                } else {
+                    result = UseItemFabricHelper.useItem((ServerPlayer) player, level, itemInHand, hand);
+                }
+                return EventResultHolder.interrupt(result);
+            }
         }
         return EventResultHolder.pass();
     }

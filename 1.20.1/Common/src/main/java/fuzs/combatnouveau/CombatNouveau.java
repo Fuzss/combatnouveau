@@ -38,7 +38,7 @@ public class CombatNouveau implements ModConstructor {
         ItemAttributeModifiersCallback.EVENT.register(AttackAttributeHandler::onItemAttributeModifiers);
         LivingKnockBackCallback.EVENT.register(ClassicCombatHandler::onLivingKnockBack);
         ProjectileImpactCallback.EVENT.register(ClassicCombatHandler::onProjectileImpact);
-        PlayerInteractEvents.USE_ITEM.register(CombatTestHandler::onUseItem);
+        PlayerInteractEvents.USE_ITEM_V2.register(CombatTestHandler::onUseItem);
         UseItemEvents.START.register(CombatTestHandler::onUseItemStart);
         PlayerTickEvents.START.register(CombatTestHandler::onStartPlayerTick);
         LivingHurtCallback.EVENT.register(CombatTestHandler::onLivingHurt);

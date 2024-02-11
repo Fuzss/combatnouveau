@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v8.0.2-1.20.1] - 2024-02-11
+### Fixed
+- Fix unable to throw snowballs and eggs on Fabric
+
 ## [v8.0.1-1.20.1] - 2023-12-06
 ### Fixed
 - Fixed attributes config option crashing
