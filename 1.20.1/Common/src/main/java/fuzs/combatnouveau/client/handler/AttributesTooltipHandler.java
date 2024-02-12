@@ -2,6 +2,7 @@ package fuzs.combatnouveau.client.handler;
 
 import com.google.common.collect.Multimap;
 import fuzs.combatnouveau.CombatNouveau;
+import fuzs.combatnouveau.client.helper.AttributeTooltipHelper;
 import fuzs.combatnouveau.config.ClientConfig;
 import fuzs.combatnouveau.config.ServerConfig;
 import fuzs.combatnouveau.core.CommonAbstractions;
@@ -86,7 +87,7 @@ public class AttributesTooltipHandler {
      */
     public static double getAdjustedAttributeAmount(ItemStack stack, @Nullable Player player, Attribute attribute, AttributeModifier attributeModifier) {
         double attributeAmount = attributeModifier.getAmount();
-        if (player != null) attributeAmount += player.getAttributeBaseValue(attribute);
+        if (player != null) attributeAmount += player.getAttributes().hasAttribute(attribute) ? player.getAttributeBaseValue(attribute) : 0.0;
         if (attribute == Attributes.ATTACK_DAMAGE)
             attributeAmount += EnchantmentHelper.getDamageBonus(stack, MobType.UNDEFINED);
         if (attribute == CommonAbstractions.INSTANCE.getAttackRangeAttribute() && !ModLoaderEnvironment.INSTANCE.isForge())
