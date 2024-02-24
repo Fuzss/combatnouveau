@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v8.0.4-1.20.1] - 2024-02-24
+### Fixed
+- Remove arbitrary range limitation for attribute override config options
+
 ## [v8.0.3-1.20.1] - 2024-02-12
 ### Fixed
 - Fix broken item tooltips for certain modded attributes

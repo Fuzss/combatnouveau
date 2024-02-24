@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v3.0.2-1.18.2] - 2024-02-24
+### Fixed
+- Remove arbitrary range limitation for attribute override config options
+
 ## [v3.0.1-1.18.2] - 2023-12-06
 ### Fixed
 - Fixed attributes config option crashing
