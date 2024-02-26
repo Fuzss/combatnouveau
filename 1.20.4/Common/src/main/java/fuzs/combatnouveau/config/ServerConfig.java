@@ -39,7 +39,7 @@ public class ServerConfig implements ConfigCore {
     public boolean airSweepAttack = true;
     @Config(description = "Attacking will no longer stop the player from sprinting. Very useful when swimming, so you can fight underwater without being stopped on every hit.")
     public boolean sprintAttacks = true;
-    @Config(description = {"Force all entity hitboxes to have a cubic size of at least 0.9 blocks, making them easier to hit and shoot.", "This only affects targeting an entity, no collisions or whatsoever. Useful for hitting e.g. bats, rabbits, silverfish, fish, and most baby animals."})
+    @Config(description = {"Force all entity hitboxes to have a cubic size of at least 0.9 blocks, making them easier to hit and shoot at.", "This only affects targeting an entity, no collisions or whatsoever. Useful for hitting e.g. bats, rabbits, silverfish, fish, and most baby animals."})
     public boolean minHitboxSize = true;
     @Config(category = "cooldown", description = "Holding down the attack button keeps attacking continuously. No more spam clicking required.")
     public boolean holdAttackButton = false;

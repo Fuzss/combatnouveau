@@ -16,8 +16,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Objects;
-
 @Mixin(LivingEntity.class)
 abstract class LivingEntityMixin extends Entity {
 
@@ -47,13 +45,13 @@ abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "isDamageSourceBlocked", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/DamageSource;getSourcePosition()Lnet/minecraft/world/phys/Vec3;", shift = At.Shift.BEFORE), cancellable = true)
     public void isDamageSourceBlocked(DamageSource damageSource, CallbackInfoReturnable<Boolean> callback) {
-        if (damageSource.isProjectile()) return;
         Vec3 sourcePosition = damageSource.getSourcePosition();
-        Objects.requireNonNull(sourcePosition, "source position is null");
-        Vec3 viewVector = this.getViewVector(1.0F);
-        Vec3 vec3 = sourcePosition.vectorTo(this.position()).normalize();
-        vec3 = new Vec3(vec3.x, 0.0, vec3.z);
-        double protectionArc = -Math.cos(CombatNouveau.CONFIG.get(ServerConfig.class).shieldProtectionArc * Math.PI * 0.5 / 180.0);
-        callback.setReturnValue(vec3.dot(viewVector) < protectionArc);
+        if (sourcePosition != null && !damageSource.isProjectile()) {
+            Vec3 viewVector = this.getViewVector(1.0F);
+            Vec3 vec3 = sourcePosition.vectorTo(this.position()).normalize();
+            vec3 = new Vec3(vec3.x, 0.0, vec3.z);
+            double protectionArc = -Math.cos(CombatNouveau.CONFIG.get(ServerConfig.class).shieldProtectionArc * Math.PI * 0.5 / 180.0);
+            callback.setReturnValue(vec3.dot(viewVector) < protectionArc);
+        }
     }
 }

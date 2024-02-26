@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog].
 
+## [v8.0.5-1.20.1] - 2024-02-26
+### Fixed
+- Fix crash when blocking with a shield while on fire
+- Fix unable to open chests behind item frames
+
 ## [v8.0.4-1.20.1] - 2024-02-24
 ### Fixed
 - Remove arbitrary range limitation for attribute override config options
