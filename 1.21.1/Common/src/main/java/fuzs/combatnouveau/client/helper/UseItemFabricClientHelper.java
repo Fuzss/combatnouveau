@@ -12,7 +12,7 @@ import org.apache.commons.lang3.mutable.MutableObject;
 
 public class UseItemFabricClientHelper {
 
-    public static InteractionResult useItem(Player player, InteractionHand hand) {
+    public static InteractionResult useItem(Player player, InteractionHand interactionHand) {
         Minecraft minecraft = Minecraft.getInstance();
         // we need to send this packet since Fabric Api hooks in disrupting the method call, so the packet is not actually send when the callback is cancelled
         minecraft.getConnection()
@@ -21,12 +21,12 @@ public class UseItemFabricClientHelper {
                 ));
         MutableObject<InteractionResult> mutableObject = new MutableObject<>();
         minecraft.gameMode.startPrediction(minecraft.level, (i) -> {
-            ServerboundUseItemPacket serverboundUseItemPacket = new ServerboundUseItemPacket(hand, i);
-            ItemStack itemInHand = player.getItemInHand(hand);
-            InteractionResultHolder<ItemStack> result = itemInHand.use(minecraft.level, player, hand);
+            ServerboundUseItemPacket serverboundUseItemPacket = new ServerboundUseItemPacket(interactionHand, i, player.getYRot(), player.getXRot());
+            ItemStack itemInHand = player.getItemInHand(interactionHand);
+            InteractionResultHolder<ItemStack> result = itemInHand.use(minecraft.level, player, interactionHand);
             ItemStack itemStack = result.getObject();
             if (itemStack != itemInHand) {
-                player.setItemInHand(hand, itemStack);
+                player.setItemInHand(interactionHand, itemStack);
             }
 
             mutableObject.setValue(result.getResult());

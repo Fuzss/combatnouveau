@@ -9,38 +9,38 @@ import net.minecraft.world.level.Level;
 
 public class UseItemFabricHelper {
 
-    public static InteractionResult useItem(ServerPlayer player, Level level, ItemStack stack, InteractionHand hand) {
-        int stackCount = stack.getCount();
-        int stackDamage = stack.getDamageValue();
-        InteractionResultHolder<ItemStack> interactionResultHolder = stack.use(level, player, hand);
-        ItemStack itemStack = interactionResultHolder.getObject();
-        if (itemStack == stack && itemStack.getCount() == stackCount && itemStack.getUseDuration() <= 0 &&
-                itemStack.getDamageValue() == stackDamage) {
-            return interactionResultHolder.getResult();
-        } else if (interactionResultHolder.getResult() == InteractionResult.FAIL && itemStack.getUseDuration() > 0 &&
+    public static InteractionResult useItem(ServerPlayer player, Level level, ItemStack itemStack, InteractionHand interactionHand) {
+        int stackCount = itemStack.getCount();
+        int stackDamage = itemStack.getDamageValue();
+        InteractionResultHolder<ItemStack> holder = itemStack.use(level, player, interactionHand);
+        ItemStack interactionResult = holder.getObject();
+        if (interactionResult == itemStack && interactionResult.getCount() == stackCount && interactionResult.getUseDuration(player) <= 0 &&
+                interactionResult.getDamageValue() == stackDamage) {
+            return holder.getResult();
+        } else if (holder.getResult() == InteractionResult.FAIL && interactionResult.getUseDuration(player) > 0 &&
                 !player.isUsingItem()) {
-            return interactionResultHolder.getResult();
+            return holder.getResult();
         } else {
-            if (stack != itemStack) {
-                player.setItemInHand(hand, itemStack);
+            if (itemStack != interactionResult) {
+                player.setItemInHand(interactionHand, interactionResult);
             }
 
-            if (player.isCreative() && itemStack != ItemStack.EMPTY) {
-                itemStack.setCount(stackCount);
-                if (itemStack.isDamageableItem() && itemStack.getDamageValue() != stackDamage) {
-                    itemStack.setDamageValue(stackDamage);
+            if (player.isCreative() && interactionResult != ItemStack.EMPTY) {
+                interactionResult.setCount(stackCount);
+                if (interactionResult.isDamageableItem() && interactionResult.getDamageValue() != stackDamage) {
+                    interactionResult.setDamageValue(stackDamage);
                 }
             }
 
-            if (itemStack.isEmpty()) {
-                player.setItemInHand(hand, ItemStack.EMPTY);
+            if (interactionResult.isEmpty()) {
+                player.setItemInHand(interactionHand, ItemStack.EMPTY);
             }
 
             if (!player.isUsingItem()) {
                 player.inventoryMenu.sendAllDataToRemote();
             }
 
-            return interactionResultHolder.getResult();
+            return holder.getResult();
         }
     }
 }

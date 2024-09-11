@@ -9,12 +9,10 @@
     "FoodDataMixin",
     "LivingEntityMixin",
     "PlayerMixin",
-    "ProjectileUtilMixin",
-    "SweepingEdgeEnchantmentMixin",
-    "accessor.ItemAccessor",
-    "accessor.PlayerAccessor"
+    "ProjectileUtilMixin"
   ],
   "client": [
+    "client.ItemStackMixin",
     "client.LivingEntityMixin",
     "client.MinecraftMixin",
     "client.accessor.MultiPlayerGameModeAccessor"

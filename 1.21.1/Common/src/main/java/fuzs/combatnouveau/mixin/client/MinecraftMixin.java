@@ -56,9 +56,11 @@ abstract class MinecraftMixin {
             callback.setReturnValue(false);
         }
         if (CombatNouveau.CONFIG.get(ServerConfig.class).airSweepAttack) {
-            if (this.player.getAttackStrengthScale(0.5F) >= 1.0F) {
+            if (this.player.getAttackStrengthScale(0.5F) == 1.0F) {
                 ((MultiPlayerGameModeAccessor) this.gameMode).combatnouveau$callEnsureHasSentCarriedItem();
                 CombatNouveau.NETWORK.sendToServer(new ServerboundSweepAttackMessage((this.player).isShiftKeyDown()));
+                // possibly blocked by retainEnergyOnMiss option, we want it regardless in case of triggering a sweep attack
+                this.player.resetAttackStrengthTicker();
             }
         }
     }

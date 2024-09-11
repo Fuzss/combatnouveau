@@ -1,2 +1,4 @@
 accessWidener   v2  named
 accessible  method  net/minecraft/client/multiplayer/MultiPlayerGameMode    startPrediction (Lnet/minecraft/client/multiplayer/ClientLevel;Lnet/minecraft/client/multiplayer/prediction/PredictiveAction;)V
+accessible  method  net/minecraft/world/entity/player/Player    getEnchantedDamage  (Lnet/minecraft/world/entity/Entity;FLnet/minecraft/world/damagesource/DamageSource;)F
+accessible  field   net/minecraft/world/entity/player/Player    lastItemInMainHand  Lnet/minecraft/world/item/ItemStack;

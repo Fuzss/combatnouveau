@@ -1,95 +1,110 @@
 package fuzs.combatnouveau.handler;
 
-import com.google.common.collect.Multimap;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import fuzs.combatnouveau.CombatNouveau;
-import fuzs.combatnouveau.config.ServerConfig;
+import fuzs.combatnouveau.config.CommonConfig;
 import fuzs.combatnouveau.core.CommonAbstractions;
-import fuzs.combatnouveau.mixin.accessor.ItemAccessor;
 import fuzs.puzzleslib.api.config.v3.serialization.ConfigDataSet;
-import net.minecraft.nbt.Tag;
-import net.minecraft.world.entity.EquipmentSlot;
+import fuzs.puzzleslib.api.core.v1.utility.ResourceLocationHelper;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class AttackAttributeHandler {
-    public static final UUID BASE_ATTACK_DAMAGE_UUID = ItemAccessor.goldenagecombat$getBaseAttackDamageUUID();
-    public static final UUID BASE_ATTACK_SPEED_UUID = ItemAccessor.goldenagecombat$getBaseAttackSpeedUUID();
-    public static final UUID BASE_ATTACK_REACH_UUID = UUID.fromString("26cb07a3-209d-4110-8e10-1010243614c8");
-    public static final Map<Class<?>, Double> ATTACK_RANGE_BONUS_OVERRIDES = Map.of(TridentItem.class,
-            1.0,
-            HoeItem.class,
-            1.0,
-            SwordItem.class,
-            0.5,
-            TieredItem.class,
+    public static final ResourceLocation BASE_ENTITY_INTERACTION_RANGE_ID = ResourceLocation.withDefaultNamespace(
+            "base_entity_interaction_range");
+    public static final Set<ResourceLocation> BASE_ATTRIBUTE_MODIFIER_IDS;
+    public static final Map<Class<? extends Item>, Double> ATTACK_RANGE_BONUS_OVERRIDES = ImmutableMap.of(
+            TridentItem.class, 1.0, HoeItem.class, 1.0, MaceItem.class, 0.5, SwordItem.class, 0.5, TieredItem.class,
             0.0
     );
-    private static final String ATTACK_DAMAGE_MODIFIER_NAME = CombatNouveau.id("attack_damage_modifier").toString();
-    private static final String ATTACK_SPEED_MODIFIER_NAME = CombatNouveau.id("attack_speed_modifier").toString();
-    private static final String ATTACK_RANGE_MODIFIER_NAME = CombatNouveau.id("attack_range_modifier").toString();
 
-    public static void onItemAttributeModifiers(ItemStack stack, EquipmentSlot equipmentSlot, Multimap<Attribute, AttributeModifier> attributeModifiers) {
-        if (!CombatNouveau.CONFIG.getHolder(ServerConfig.class).isAvailable()) return;
-        // don't change items whose attributes have already been changed via the nbt tag
-        if (equipmentSlot == EquipmentSlot.MAINHAND && (!stack.hasTag() || !stack.getTag()
-                .contains("AttributeModifiers", Tag.TAG_LIST))) {
-            trySetNewAttributeValue(stack,
-                    attributeModifiers,
-                    Attributes.ATTACK_DAMAGE,
-                    BASE_ATTACK_DAMAGE_UUID,
-                    ATTACK_DAMAGE_MODIFIER_NAME,
-                    CombatNouveau.CONFIG.get(ServerConfig.class).attackDamageOverrides
-            );
-            trySetNewAttributeValue(stack,
-                    attributeModifiers,
-                    Attributes.ATTACK_SPEED,
-                    BASE_ATTACK_SPEED_UUID,
-                    ATTACK_SPEED_MODIFIER_NAME,
-                    CombatNouveau.CONFIG.get(ServerConfig.class).attackSpeedOverrides
-            );
-            Attribute attackRangeAttribute = CommonAbstractions.INSTANCE.getAttackRangeAttribute();
-            if (attackRangeAttribute != null && !trySetNewAttributeValue(stack,
-                    attributeModifiers,
-                    attackRangeAttribute,
-                    BASE_ATTACK_REACH_UUID,
-                    ATTACK_RANGE_MODIFIER_NAME,
-                    CombatNouveau.CONFIG.get(ServerConfig.class).attackReachOverrides
-            )) {
-                if (CombatNouveau.CONFIG.get(ServerConfig.class).additionalAttackReach) {
-                    for (Map.Entry<Class<?>, Double> entry : ATTACK_RANGE_BONUS_OVERRIDES.entrySet()) {
-                        if (entry.getKey().isInstance(stack.getItem())) {
-                            setNewAttributeValue(attributeModifiers,
-                                    attackRangeAttribute,
-                                    BASE_ATTACK_REACH_UUID,
-                                    ATTACK_RANGE_MODIFIER_NAME,
-                                    entry.getValue()
-                            );
-                            break;
-                        }
+    static {
+        BASE_ATTRIBUTE_MODIFIER_IDS = Stream.concat(Stream.of(BASE_ENTITY_INTERACTION_RANGE_ID), Arrays.stream(
+                        ArmorItem.Type.values())
+                .map(ArmorItem.Type::getName)
+                .map(s -> "armor." + s)
+                .map(ResourceLocationHelper::withDefaultNamespace)).collect(ImmutableSet.toImmutableSet());
+    }
+
+    public static void onComputeItemAttributeModifiers(Item item, List<ItemAttributeModifiers.Entry> itemAttributeModifiers) {
+        if (!CombatNouveau.CONFIG.getHolder(CommonConfig.class).isAvailable()) return;
+        setAttributeValue(item, itemAttributeModifiers, Attributes.ATTACK_DAMAGE, Item.BASE_ATTACK_DAMAGE_ID,
+                CombatNouveau.CONFIG.get(CommonConfig.class).attackDamageOverrides
+        );
+        setAttributeValue(item, itemAttributeModifiers, Attributes.ATTACK_SPEED, Item.BASE_ATTACK_SPEED_ID,
+                CombatNouveau.CONFIG.get(CommonConfig.class).attackSpeedOverrides
+        );
+        if (!setAttributeValue(item, itemAttributeModifiers, CommonAbstractions.INSTANCE.getAttackRangeAttribute(),
+                BASE_ENTITY_INTERACTION_RANGE_ID,
+                CombatNouveau.CONFIG.get(CommonConfig.class).entityInteractionRangeOverrides
+        )) {
+            if (CombatNouveau.CONFIG.get(CommonConfig.class).additionalEntityInteractionRange) {
+                for (Map.Entry<Class<? extends Item>, Double> entry : ATTACK_RANGE_BONUS_OVERRIDES.entrySet()) {
+                    if (entry.getKey().isInstance(item)) {
+                        setAttributeValue(itemAttributeModifiers, CommonAbstractions.INSTANCE.getAttackRangeAttribute(),
+                                BASE_ENTITY_INTERACTION_RANGE_ID, entry.getValue()
+                        );
+                        break;
                     }
                 }
             }
         }
     }
 
-    private static boolean trySetNewAttributeValue(ItemStack itemStack, Multimap<Attribute, AttributeModifier> attributeModifiers, Attribute attribute, UUID modifierUUID, String modifierName, ConfigDataSet<Item> attackDamageOverrides) {
-        if (attackDamageOverrides.contains(itemStack.getItem())) {
-            double newValue = attackDamageOverrides.<Double>getOptional(itemStack.getItem(), 0).orElseThrow();
-            setNewAttributeValue(attributeModifiers, attribute, modifierUUID, modifierName, newValue);
+    private static boolean setAttributeValue(Item item, List<ItemAttributeModifiers.Entry> itemAttributeModifiers, Holder<Attribute> attribute, ResourceLocation id, ConfigDataSet<Item> attackDamageOverrides) {
+        if (attackDamageOverrides.contains(item)) {
+            double newValue = attackDamageOverrides.<Double>getOptional(item, 0).orElseThrow();
+            setAttributeValue(itemAttributeModifiers, attribute, id, newValue);
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
-    private static void setNewAttributeValue(Multimap<Attribute, AttributeModifier> attributeModifiers, Attribute attribute, UUID modifierUUID, String modifierName, double newValue) {
-        attributeModifiers.removeAll(attribute);
-        attributeModifiers.put(attribute,
-                new AttributeModifier(modifierUUID, modifierName, newValue, AttributeModifier.Operation.ADDITION)
+    private static void setAttributeValue(List<ItemAttributeModifiers.Entry> itemAttributeModifiers, Holder<Attribute> attribute, ResourceLocation id, double newValue) {
+        AttributeModifier attributeModifier = new AttributeModifier(id, newValue,
+                AttributeModifier.Operation.ADD_VALUE
         );
+        ItemAttributeModifiers.Entry newEntry = new ItemAttributeModifiers.Entry(attribute, attributeModifier,
+                EquipmentSlotGroup.MAINHAND
+        );
+        ListIterator<ItemAttributeModifiers.Entry> iterator = itemAttributeModifiers.listIterator();
+        while (iterator.hasNext()) {
+            ItemAttributeModifiers.Entry entry = iterator.next();
+            if (entry.slot() == EquipmentSlotGroup.MAINHAND && entry.matches(attribute, id)) {
+                iterator.set(newEntry);
+                return;
+            }
+        }
+        itemAttributeModifiers.add(newEntry);
+    }
+
+    public static void onFinalizeItemComponents(Item item, Consumer<Function<DataComponentMap, DataComponentPatch>> consumer) {
+        if (!CombatNouveau.CONFIG.getHolder(CommonConfig.class).isAvailable()) return;
+        if (!CombatNouveau.CONFIG.get(CommonConfig.class).increaseStackSize) return;
+        if (item == Items.SNOWBALL || item == Items.EGG) {
+            consumer.accept((DataComponentMap dataComponents) -> {
+                return DataComponentPatch.builder().set(DataComponents.MAX_STACK_SIZE, 64).build();
+            });
+        } else if (item == Items.POTION) {
+            consumer.accept((DataComponentMap dataComponents) -> {
+                return DataComponentPatch.builder().set(DataComponents.MAX_STACK_SIZE, 16).build();
+            });
+        }
     }
 }

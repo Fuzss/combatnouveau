@@ -31,7 +31,7 @@ abstract class LivingEntityMixin extends Entity {
         if (CombatNouveau.CONFIG.get(ServerConfig.class).shieldKnockback == ServerConfig.ShieldKnockback.VARIABLE) {
             int variableShieldKnockbackDelay = CombatNouveau.CONFIG.get(ServerConfig.class).variableShieldKnockbackDelay;
             if (!CombatNouveau.CONFIG.get(ServerConfig.class).removeShieldDelay) variableShieldKnockbackDelay += 5;
-            knockBackStrength = (target.getUseItem().getUseDuration() - target.getUseItemRemainingTicks()) / (double) variableShieldKnockbackDelay;
+            knockBackStrength = (target.getUseItem().getUseDuration(target) - target.getUseItemRemainingTicks()) / (double) variableShieldKnockbackDelay;
             knockBackStrength = 1.0 - Mth.clamp(knockBackStrength, 0.0, 1.0);
             knockBackStrength += 0.5;
         } else {
