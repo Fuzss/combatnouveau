@@ -16,16 +16,16 @@ import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.LevelBasedValue;
 import net.minecraft.world.item.enchantment.effects.EnchantmentAttributeEffect;
 
-public class DynamicEnchantmentRegistryProvider extends AbstractRegistriesDatapackGenerator.Enchantments {
+public class DynamicEnchantmentRegistryProvider extends AbstractRegistriesDatapackGenerator<Enchantment> {
 
     public DynamicEnchantmentRegistryProvider(DataProviderContext context) {
-        super(context);
+        super(Registries.ENCHANTMENT, context);
     }
 
     @Override
     protected void addBootstrap(BootstrapContext<Enchantment> context) {
         HolderGetter<Item> items = context.lookup(Registries.ITEM);
-        this.add(net.minecraft.world.item.enchantment.Enchantments.SWEEPING_EDGE, Enchantment.enchantment(
+        registerEnchantment(context, net.minecraft.world.item.enchantment.Enchantments.SWEEPING_EDGE, Enchantment.enchantment(
                         Enchantment.definition(items.getOrThrow(ItemTags.SWORD_ENCHANTABLE), 2, 3,
                                 Enchantment.dynamicCost(5, 9), Enchantment.dynamicCost(20, 9), 4, EquipmentSlotGroup.MAINHAND
                         ))
