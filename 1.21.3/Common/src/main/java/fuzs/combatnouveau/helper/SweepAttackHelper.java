@@ -25,17 +25,18 @@ public class SweepAttackHelper {
 
     public static void airSweepAttack(Player player) {
         if (player.getAttackStrengthScale(0.5F) == 1.0F) {
-            double walkDist = player.walkDist - player.walkDistO;
-            if (!player.onGround() || !(walkDist < player.getSpeed())) return;
-            float attackDamage = (float) player.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
-            if (attackDamage > 0.0F && allowSweepAttack(player)) {
-                double moveX = (double) (-Mth.sin(player.getYRot() * ((float) Math.PI / 180))) * 2.0;
-                double moveZ = (double) Mth.cos(player.getYRot() * ((float) Math.PI / 180)) * 2.0;
-                AABB aABB = CommonAbstractions.INSTANCE.getSweepHitBox(player, player).move(moveX, 0.0, moveZ);
-                sweepAttack(player, aABB, attackDamage, null);
+            if (player.onGround() &&
+                    player.getKnownMovement().horizontalDistanceSqr() < Mth.square(player.getSpeed() * 2.5F)) {
+                float attackDamage = (float) player.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
+                if (attackDamage > 0.0F && allowSweepAttack(player)) {
+                    double moveX = (double) (-Mth.sin(player.getYRot() * ((float) Math.PI / 180))) * 2.0;
+                    double moveZ = (double) Mth.cos(player.getYRot() * ((float) Math.PI / 180)) * 2.0;
+                    AABB aABB = CommonAbstractions.INSTANCE.getSweepHitBox(player, player).move(moveX, 0.0, moveZ);
+                    sweepAttack(player, aABB, attackDamage, null);
+                }
+                // also resets attack ticker
+                player.swing(InteractionHand.MAIN_HAND);
             }
-            // also resets attack ticker
-            player.swing(InteractionHand.MAIN_HAND);
         }
     }
 
@@ -51,26 +52,33 @@ public class SweepAttackHelper {
     }
 
     private static void sweepAttack(Player player, AABB aABB, float attackDamage, @Nullable Entity target) {
-        float sweepingAttackDamage = 1.0F + (float) player.getAttributeValue(Attributes.SWEEPING_DAMAGE_RATIO) * attackDamage;
+        float sweepingAttackDamage =
+                1.0F + (float) player.getAttributeValue(Attributes.SWEEPING_DAMAGE_RATIO) * attackDamage;
         List<LivingEntity> list = player.level().getEntitiesOfClass(LivingEntity.class, aABB);
         for (LivingEntity livingEntity : list) {
-            if (livingEntity != player
-                    && livingEntity != target
-                    && !player.isAlliedTo(livingEntity)
-                    && (!(livingEntity instanceof ArmorStand) || !((ArmorStand) livingEntity).isMarker())
-                    && player.distanceToSqr(livingEntity) < 9.0) {
+            if (livingEntity != player && livingEntity != target && !player.isAlliedTo(livingEntity) &&
+                    (!(livingEntity instanceof ArmorStand) || !((ArmorStand) livingEntity).isMarker()) &&
+                    player.distanceToSqr(livingEntity) < 9.0) {
                 DamageSource damageSource = player.damageSources().playerAttack(player);
                 float enchantedDamage = player.getEnchantedDamage(livingEntity, sweepingAttackDamage, damageSource);
-                livingEntity.knockback(
-                        0.4F, (double)Mth.sin(player.getYRot() * (float) (Math.PI / 180.0)), (double)(-Mth.cos(player.getYRot() * (float) (Math.PI / 180.0)))
-                );
+                livingEntity.knockback(0.4F,
+                        (double) Mth.sin(player.getYRot() * (float) (Math.PI / 180.0)),
+                        (double) (-Mth.cos(player.getYRot() * (float) (Math.PI / 180.0))));
                 livingEntity.hurt(damageSource, enchantedDamage);
                 if (player.level() instanceof ServerLevel serverLevel) {
                     EnchantmentHelper.doPostAttackEffects(serverLevel, livingEntity, damageSource);
                 }
             }
         }
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, player.getSoundSource(), 1.0f, 1.0f);
+        player.level()
+                .playSound(null,
+                        player.getX(),
+                        player.getY(),
+                        player.getZ(),
+                        SoundEvents.PLAYER_ATTACK_SWEEP,
+                        player.getSoundSource(),
+                        1.0f,
+                        1.0f);
         player.sweepAttack();
     }
 }

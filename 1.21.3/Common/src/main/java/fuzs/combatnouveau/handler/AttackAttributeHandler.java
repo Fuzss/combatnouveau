@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import fuzs.combatnouveau.CombatNouveau;
 import fuzs.combatnouveau.config.CommonConfig;
-import fuzs.combatnouveau.core.CommonAbstractions;
 import fuzs.puzzleslib.api.config.v3.serialization.ConfigDataSet;
 import fuzs.puzzleslib.api.core.v1.utility.ResourceLocationHelper;
 import net.minecraft.core.Holder;
@@ -18,6 +17,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.equipment.ArmorType;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -28,37 +28,49 @@ public class AttackAttributeHandler {
     public static final ResourceLocation BASE_ENTITY_INTERACTION_RANGE_ID = ResourceLocation.withDefaultNamespace(
             "base_entity_interaction_range");
     public static final Set<ResourceLocation> BASE_ATTRIBUTE_MODIFIER_IDS;
-    public static final Map<Class<? extends Item>, Double> ATTACK_RANGE_BONUS_OVERRIDES = ImmutableMap.of(
-            TridentItem.class, 1.0, HoeItem.class, 1.0, MaceItem.class, 0.5, SwordItem.class, 0.5, TieredItem.class,
-            0.0
-    );
+    public static final Map<Class<? extends Item>, Double> ATTACK_RANGE_BONUS_OVERRIDES = ImmutableMap.of(TridentItem.class,
+            1.0,
+            HoeItem.class,
+            1.0,
+            MaceItem.class,
+            0.5,
+            SwordItem.class,
+            0.5,
+            DiggerItem.class,
+            0.0);
 
     static {
-        BASE_ATTRIBUTE_MODIFIER_IDS = Stream.concat(Stream.of(BASE_ENTITY_INTERACTION_RANGE_ID), Arrays.stream(
-                        ArmorItem.Type.values())
-                .map(ArmorItem.Type::getName)
-                .map(s -> "armor." + s)
-                .map(ResourceLocationHelper::withDefaultNamespace)).collect(ImmutableSet.toImmutableSet());
+        BASE_ATTRIBUTE_MODIFIER_IDS = Stream.concat(Stream.of(BASE_ENTITY_INTERACTION_RANGE_ID),
+                Arrays.stream(ArmorType.values())
+                        .map(ArmorType::getName)
+                        .map(s -> "armor." + s)
+                        .map(ResourceLocationHelper::withDefaultNamespace)).collect(ImmutableSet.toImmutableSet());
     }
 
     public static void onComputeItemAttributeModifiers(Item item, List<ItemAttributeModifiers.Entry> itemAttributeModifiers) {
         if (!CombatNouveau.CONFIG.getHolder(CommonConfig.class).isAvailable()) return;
-        setAttributeValue(item, itemAttributeModifiers, Attributes.ATTACK_DAMAGE, Item.BASE_ATTACK_DAMAGE_ID,
-                CombatNouveau.CONFIG.get(CommonConfig.class).attackDamageOverrides
-        );
-        setAttributeValue(item, itemAttributeModifiers, Attributes.ATTACK_SPEED, Item.BASE_ATTACK_SPEED_ID,
-                CombatNouveau.CONFIG.get(CommonConfig.class).attackSpeedOverrides
-        );
-        if (!setAttributeValue(item, itemAttributeModifiers, CommonAbstractions.INSTANCE.getAttackRangeAttribute(),
+        setAttributeValue(item,
+                itemAttributeModifiers,
+                Attributes.ATTACK_DAMAGE,
+                Item.BASE_ATTACK_DAMAGE_ID,
+                CombatNouveau.CONFIG.get(CommonConfig.class).attackDamageOverrides);
+        setAttributeValue(item,
+                itemAttributeModifiers,
+                Attributes.ATTACK_SPEED,
+                Item.BASE_ATTACK_SPEED_ID,
+                CombatNouveau.CONFIG.get(CommonConfig.class).attackSpeedOverrides);
+        if (!setAttributeValue(item,
+                itemAttributeModifiers,
+                Attributes.ENTITY_INTERACTION_RANGE,
                 BASE_ENTITY_INTERACTION_RANGE_ID,
-                CombatNouveau.CONFIG.get(CommonConfig.class).entityInteractionRangeOverrides
-        )) {
+                CombatNouveau.CONFIG.get(CommonConfig.class).entityInteractionRangeOverrides)) {
             if (CombatNouveau.CONFIG.get(CommonConfig.class).additionalEntityInteractionRange) {
                 for (Map.Entry<Class<? extends Item>, Double> entry : ATTACK_RANGE_BONUS_OVERRIDES.entrySet()) {
                     if (entry.getKey().isInstance(item)) {
-                        setAttributeValue(itemAttributeModifiers, CommonAbstractions.INSTANCE.getAttackRangeAttribute(),
-                                BASE_ENTITY_INTERACTION_RANGE_ID, entry.getValue()
-                        );
+                        setAttributeValue(itemAttributeModifiers,
+                                Attributes.ENTITY_INTERACTION_RANGE,
+                                BASE_ENTITY_INTERACTION_RANGE_ID,
+                                entry.getValue());
                         break;
                     }
                 }
@@ -77,12 +89,12 @@ public class AttackAttributeHandler {
     }
 
     private static void setAttributeValue(List<ItemAttributeModifiers.Entry> itemAttributeModifiers, Holder<Attribute> attribute, ResourceLocation id, double newValue) {
-        AttributeModifier attributeModifier = new AttributeModifier(id, newValue,
-                AttributeModifier.Operation.ADD_VALUE
-        );
-        ItemAttributeModifiers.Entry newEntry = new ItemAttributeModifiers.Entry(attribute, attributeModifier,
-                EquipmentSlotGroup.MAINHAND
-        );
+        AttributeModifier attributeModifier = new AttributeModifier(id,
+                newValue,
+                AttributeModifier.Operation.ADD_VALUE);
+        ItemAttributeModifiers.Entry newEntry = new ItemAttributeModifiers.Entry(attribute,
+                attributeModifier,
+                EquipmentSlotGroup.MAINHAND);
         ListIterator<ItemAttributeModifiers.Entry> iterator = itemAttributeModifiers.listIterator();
         while (iterator.hasNext()) {
             ItemAttributeModifiers.Entry entry = iterator.next();

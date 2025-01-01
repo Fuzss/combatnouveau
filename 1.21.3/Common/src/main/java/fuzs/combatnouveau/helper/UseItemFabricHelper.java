@@ -1,38 +1,38 @@
 package fuzs.combatnouveau.helper;
 
+import fuzs.puzzleslib.api.util.v1.InteractionResultHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class UseItemFabricHelper {
 
     public static InteractionResult useItem(ServerPlayer player, Level level, ItemStack itemStack, InteractionHand interactionHand) {
-        int stackCount = itemStack.getCount();
-        int stackDamage = itemStack.getDamageValue();
-        InteractionResultHolder<ItemStack> holder = itemStack.use(level, player, interactionHand);
-        ItemStack interactionResult = holder.getObject();
-        if (interactionResult == itemStack && interactionResult.getCount() == stackCount && interactionResult.getUseDuration(player) <= 0 &&
-                interactionResult.getDamageValue() == stackDamage) {
-            return holder.getResult();
-        } else if (holder.getResult() == InteractionResult.FAIL && interactionResult.getUseDuration(player) > 0 &&
+        int itemStackCount = itemStack.getCount();
+        int itemStackDamage = itemStack.getDamageValue();
+        InteractionResult interactionResult = itemStack.use(level, player, interactionHand);
+        ItemStack itemStackResult = InteractionResultHelper.getObject(interactionResult);
+        if (itemStackResult == itemStack && itemStackResult.getCount() == itemStackCount &&
+                itemStackResult.getUseDuration(player) <= 0 && itemStackResult.getDamageValue() == itemStackDamage) {
+            return interactionResult;
+        } else if (interactionResult == InteractionResult.FAIL && itemStackResult.getUseDuration(player) > 0 &&
                 !player.isUsingItem()) {
-            return holder.getResult();
+            return interactionResult;
         } else {
-            if (itemStack != interactionResult) {
-                player.setItemInHand(interactionHand, interactionResult);
+            if (itemStack != itemStackResult) {
+                player.setItemInHand(interactionHand, itemStackResult);
             }
 
-            if (player.isCreative() && interactionResult != ItemStack.EMPTY) {
-                interactionResult.setCount(stackCount);
-                if (interactionResult.isDamageableItem() && interactionResult.getDamageValue() != stackDamage) {
-                    interactionResult.setDamageValue(stackDamage);
+            if (player.isCreative() && itemStackResult != ItemStack.EMPTY) {
+                itemStackResult.setCount(itemStackCount);
+                if (itemStackResult.isDamageableItem() && itemStackResult.getDamageValue() != itemStackDamage) {
+                    itemStackResult.setDamageValue(itemStackDamage);
                 }
             }
 
-            if (interactionResult.isEmpty()) {
+            if (itemStackResult.isEmpty()) {
                 player.setItemInHand(interactionHand, ItemStack.EMPTY);
             }
 
@@ -40,7 +40,7 @@ public class UseItemFabricHelper {
                 player.inventoryMenu.sendAllDataToRemote();
             }
 
-            return holder.getResult();
+            return interactionResult;
         }
     }
 }

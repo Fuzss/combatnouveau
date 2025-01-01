@@ -18,8 +18,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.EggItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.SnowballItem;
-import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 
 public class CombatTestHandler {
@@ -34,11 +34,11 @@ public class CombatTestHandler {
     }
 
     public static EventResult onUseItemStart(LivingEntity livingEntity, ItemStack itemStack, MutableInt remainingUseDuration) {
-        if (CombatNouveau.CONFIG.get(ServerConfig.class).removeShieldDelay && itemStack.getUseAnimation() == UseAnim.BLOCK) {
+        if (CombatNouveau.CONFIG.get(ServerConfig.class).removeShieldDelay && itemStack.getUseAnimation() == ItemUseAnimation.BLOCK) {
             // remove shield activation delay
             remainingUseDuration.accept(itemStack.getUseDuration(livingEntity) - 5);
         }
-        if (CombatNouveau.CONFIG.get(ServerConfig.class).fastDrinking && itemStack.getUseAnimation() == UseAnim.DRINK) {
+        if (CombatNouveau.CONFIG.get(ServerConfig.class).fastDrinking && itemStack.getUseAnimation() == ItemUseAnimation.DRINK) {
             remainingUseDuration.accept(20);
         }
         return EventResult.PASS;
@@ -49,7 +49,7 @@ public class CombatTestHandler {
         ItemStack itemInHand = player.getItemInHand(interactionHand);
         if (itemInHand.getItem() instanceof SnowballItem || itemInHand.getItem() instanceof EggItem) {
             // add delay after using an item
-            player.getCooldowns().addCooldown(itemInHand.getItem(), 4);
+            player.getCooldowns().addCooldown(itemInHand, 4);
             // the callback runs before cooldowns on Fabric, so we need to perform the interaction ourselves and cancel the callback
             if (ModLoaderEnvironment.INSTANCE.getModLoader().isFabricLike()) {
                 InteractionResult result;
@@ -69,8 +69,8 @@ public class CombatTestHandler {
     public static EventResult onLivingHurt(LivingEntity livingEntity, DamageSource damageSource, MutableFloat amount) {
         if (CombatNouveau.CONFIG.get(ServerConfig.class).eatingInterruption) {
             if (!damageSource.is(DamageTypeTags.BYPASSES_ARMOR)) {
-                UseAnim useAction = livingEntity.getUseItem().getUseAnimation();
-                if (useAction == UseAnim.EAT || useAction == UseAnim.DRINK) {
+                ItemUseAnimation useAction = livingEntity.getUseItem().getUseAnimation();
+                if (useAction == ItemUseAnimation.EAT || useAction == ItemUseAnimation.DRINK) {
                     livingEntity.stopUsingItem();
                 }
             }

@@ -23,17 +23,23 @@ public class DynamicEnchantmentRegistryProvider extends AbstractRegistriesDatapa
     }
 
     @Override
-    protected void addBootstrap(BootstrapContext<Enchantment> context) {
+    public void addBootstrap(BootstrapContext<Enchantment> context) {
         HolderGetter<Item> items = context.lookup(Registries.ITEM);
-        registerEnchantment(context, net.minecraft.world.item.enchantment.Enchantments.SWEEPING_EDGE, Enchantment.enchantment(
-                        Enchantment.definition(items.getOrThrow(ItemTags.SWORD_ENCHANTABLE), 2, 3,
-                                Enchantment.dynamicCost(5, 9), Enchantment.dynamicCost(20, 9), 4, EquipmentSlotGroup.MAINHAND
-                        ))
-                .withEffect(EnchantmentEffectComponents.ATTRIBUTES, new EnchantmentAttributeEffect(
-                        ResourceLocation.withDefaultNamespace("enchantment.sweeping_edge"),
-                        Attributes.SWEEPING_DAMAGE_RATIO, new LevelBasedValue.Fraction(LevelBasedValue.perLevel(0.5F),
-                        LevelBasedValue.perLevel(2.0F, 1.0F)
-                ), AttributeModifier.Operation.ADD_VALUE
-                )));
+        registerEnchantment(context,
+                net.minecraft.world.item.enchantment.Enchantments.SWEEPING_EDGE,
+                Enchantment.enchantment(Enchantment.definition(items.getOrThrow(ItemTags.SWORD_ENCHANTABLE),
+                                2,
+                                3,
+                                Enchantment.dynamicCost(5, 9),
+                                Enchantment.dynamicCost(20, 9),
+                                4,
+                                EquipmentSlotGroup.MAINHAND))
+                        .withEffect(EnchantmentEffectComponents.ATTRIBUTES,
+                                new EnchantmentAttributeEffect(ResourceLocation.withDefaultNamespace(
+                                        "enchantment.sweeping_edge"),
+                                        Attributes.SWEEPING_DAMAGE_RATIO,
+                                        new LevelBasedValue.Fraction(LevelBasedValue.perLevel(0.5F),
+                                                LevelBasedValue.perLevel(2.0F, 1.0F)),
+                                        AttributeModifier.Operation.ADD_VALUE)));
     }
 }
