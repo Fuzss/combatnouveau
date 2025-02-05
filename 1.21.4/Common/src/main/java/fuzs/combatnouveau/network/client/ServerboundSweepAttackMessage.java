@@ -20,7 +20,9 @@ public record ServerboundSweepAttackMessage(boolean usingSecondaryAction) implem
                 // mimics behavior of ServerboundInteractPacket as that one is used in combat tests
                 player.setShiftKeyDown(message.usingSecondaryAction);
                 if (player.gameMode.getGameModeForPlayer() != GameType.SPECTATOR) {
-                    SweepAttackHelper.airSweepAttack(player);
+                    if (SweepAttackHelper.isSweepAttackPossible(player)) {
+                        SweepAttackHelper.airSweepAttack(player);
+                    }
                 }
             }
         };

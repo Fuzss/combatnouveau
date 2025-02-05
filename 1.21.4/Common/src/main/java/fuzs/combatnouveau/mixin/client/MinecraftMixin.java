@@ -3,6 +3,7 @@ package fuzs.combatnouveau.mixin.client;
 import fuzs.combatnouveau.CombatNouveau;
 import fuzs.combatnouveau.client.handler.AutoAttackHandler;
 import fuzs.combatnouveau.config.ServerConfig;
+import fuzs.combatnouveau.helper.SweepAttackHelper;
 import fuzs.combatnouveau.mixin.client.accessor.MultiPlayerGameModeAccessor;
 import fuzs.combatnouveau.network.client.ServerboundSweepAttackMessage;
 import fuzs.combatnouveau.network.client.ServerboundSwingArmMessage;
@@ -29,7 +30,13 @@ abstract class MinecraftMixin {
     @Nullable
     public MultiPlayerGameMode gameMode;
 
-    @Inject(method = "continueAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;stopDestroyBlock()V", shift = At.Shift.AFTER))
+    @Inject(
+            method = "continueAttack", at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;stopDestroyBlock()V",
+            shift = At.Shift.AFTER
+    )
+    )
     private void continueAttack(boolean attacking, CallbackInfo callback) {
         if (!CombatNouveau.CONFIG.get(ServerConfig.class).holdAttackButton) return;
         // do not cancel stopDestroyBlock as in combat snapshots
@@ -47,18 +54,24 @@ abstract class MinecraftMixin {
         throw new RuntimeException();
     }
 
-    @Inject(method = "startAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;resetAttackStrengthTicker()V", shift = At.Shift.BEFORE), cancellable = true)
+    @Inject(
+            method = "startAttack", at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/player/LocalPlayer;resetAttackStrengthTicker()V",
+            shift = At.Shift.BEFORE
+    ), cancellable = true
+    )
     private void startAttack(CallbackInfoReturnable<Boolean> callback) {
         if (CombatNouveau.CONFIG.get(ServerConfig.class).retainEnergyOnMiss) {
             // finish executing Minecraft::startAttack without calling a reset on the attack strength ticker
             this.player.swing(InteractionHand.MAIN_HAND, false);
-            CombatNouveau.NETWORK.sendToServer(new ServerboundSwingArmMessage(InteractionHand.MAIN_HAND));
+            CombatNouveau.NETWORK.sendMessage(new ServerboundSwingArmMessage(InteractionHand.MAIN_HAND));
             callback.setReturnValue(false);
         }
         if (CombatNouveau.CONFIG.get(ServerConfig.class).airSweepAttack) {
-            if (this.player.getAttackStrengthScale(0.5F) == 1.0F) {
+            if (SweepAttackHelper.isSweepAttackPossible(this.player)) {
                 ((MultiPlayerGameModeAccessor) this.gameMode).combatnouveau$callEnsureHasSentCarriedItem();
-                CombatNouveau.NETWORK.sendToServer(new ServerboundSweepAttackMessage((this.player).isShiftKeyDown()));
+                CombatNouveau.NETWORK.sendMessage(new ServerboundSweepAttackMessage((this.player).isShiftKeyDown()));
                 // possibly blocked by retainEnergyOnMiss option, we want it regardless in case of triggering a sweep attack
                 this.player.resetAttackStrengthTicker();
             }

@@ -3,7 +3,7 @@ package fuzs.combatnouveau;
 import fuzs.combatnouveau.config.ClientConfig;
 import fuzs.combatnouveau.config.CommonConfig;
 import fuzs.combatnouveau.config.ServerConfig;
-import fuzs.combatnouveau.data.DynamicEnchantmentRegistryProvider;
+import fuzs.combatnouveau.data.DynamicDatapackRegistriesProvider;
 import fuzs.combatnouveau.handler.AttackAttributeHandler;
 import fuzs.combatnouveau.handler.ClassicCombatHandler;
 import fuzs.combatnouveau.handler.CombatTestHandler;
@@ -18,6 +18,7 @@ import fuzs.puzzleslib.api.event.v1.FinalizeItemComponentsCallback;
 import fuzs.puzzleslib.api.event.v1.entity.ProjectileImpactCallback;
 import fuzs.puzzleslib.api.event.v1.entity.living.LivingHurtCallback;
 import fuzs.puzzleslib.api.event.v1.entity.living.LivingKnockBackCallback;
+import fuzs.puzzleslib.api.event.v1.entity.living.ShieldBlockCallback;
 import fuzs.puzzleslib.api.event.v1.entity.living.UseItemEvents;
 import fuzs.puzzleslib.api.event.v1.entity.player.PlayerInteractEvents;
 import fuzs.puzzleslib.api.event.v1.entity.player.PlayerTickEvents;
@@ -33,10 +34,13 @@ public class CombatNouveau implements ModConstructor {
     public static final String MOD_NAME = "Combat Nouveau";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 
-    public static final NetworkHandler NETWORK = NetworkHandler.builder(MOD_ID).registerServerbound(
-            ServerboundSweepAttackMessage.class).registerServerbound(ServerboundSwingArmMessage.class);
-    public static final ConfigHolder CONFIG = ConfigHolder.builder(MOD_ID).client(ClientConfig.class).common(
-            CommonConfig.class).server(ServerConfig.class);
+    public static final NetworkHandler NETWORK = NetworkHandler.builder(MOD_ID)
+            .registerServerbound(ServerboundSweepAttackMessage.class)
+            .registerServerbound(ServerboundSwingArmMessage.class);
+    public static final ConfigHolder CONFIG = ConfigHolder.builder(MOD_ID)
+            .client(ClientConfig.class)
+            .common(CommonConfig.class)
+            .server(ServerConfig.class);
 
     @Override
     public void onConstructMod() {
@@ -52,6 +56,7 @@ public class CombatNouveau implements ModConstructor {
         UseItemEvents.START.register(CombatTestHandler::onUseItemStart);
         PlayerTickEvents.START.register(CombatTestHandler::onStartPlayerTick);
         LivingHurtCallback.EVENT.register(CombatTestHandler::onLivingHurt);
+        ShieldBlockCallback.EVENT.register(CombatTestHandler::onShieldBlock);
     }
 
     @Override
@@ -59,8 +64,8 @@ public class CombatNouveau implements ModConstructor {
         // need this here so the game does not complain about experimental settings when the config option is disabled
         if (!CONFIG.get(CommonConfig.class).halveSweepingDamage) return;
         context.addRepositorySource(PackResourcesHelper.buildServerPack(id("halved_sweeping_damage"),
-                DynamicPackResources.create(DynamicEnchantmentRegistryProvider::new), true
-        ));
+                DynamicPackResources.create(DynamicDatapackRegistriesProvider::new),
+                true));
     }
 
     public static ResourceLocation id(String path) {

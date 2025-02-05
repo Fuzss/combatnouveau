@@ -11,10 +11,12 @@ import fuzs.puzzleslib.api.event.v1.data.MutableFloat;
 import fuzs.puzzleslib.api.event.v1.data.MutableInt;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.EggItem;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +25,7 @@ import net.minecraft.world.item.SnowballItem;
 import net.minecraft.world.level.Level;
 
 public class CombatTestHandler {
-    
+
     public static void onStartPlayerTick(Player player) {
         if (!CombatNouveau.CONFIG.get(ServerConfig.class).fastSwitching) return;
         // switching items no longer triggers the attack cooldown
@@ -34,13 +36,16 @@ public class CombatTestHandler {
     }
 
     public static EventResult onUseItemStart(LivingEntity livingEntity, ItemStack itemStack, MutableInt remainingUseDuration) {
-        if (CombatNouveau.CONFIG.get(ServerConfig.class).removeShieldDelay && itemStack.getUseAnimation() == ItemUseAnimation.BLOCK) {
+        if (CombatNouveau.CONFIG.get(ServerConfig.class).removeShieldDelay &&
+                itemStack.getUseAnimation() == ItemUseAnimation.BLOCK) {
             // remove shield activation delay
             remainingUseDuration.accept(itemStack.getUseDuration(livingEntity) - 5);
         }
-        if (CombatNouveau.CONFIG.get(ServerConfig.class).fastDrinking && itemStack.getUseAnimation() == ItemUseAnimation.DRINK) {
+        if (CombatNouveau.CONFIG.get(ServerConfig.class).fastDrinking &&
+                itemStack.getUseAnimation() == ItemUseAnimation.DRINK) {
             remainingUseDuration.accept(20);
         }
+
         return EventResult.PASS;
     }
 
@@ -81,6 +86,33 @@ public class CombatTestHandler {
                 livingEntity.invulnerableTime = 0;
             }
         }
+
+        return EventResult.PASS;
+    }
+
+    public static EventResult onShieldBlock(LivingEntity blockingEntity, DamageSource damageSource, float damageAmount) {
+        if (CombatNouveau.CONFIG.get(ServerConfig.class).shieldKnockback == ServerConfig.ShieldKnockback.NONE) {
+            return EventResult.PASS;
+        }
+        if (damageSource.isDirect() && damageSource.getEntity() instanceof LivingEntity attackingEntity) {
+            double knockBackStrength;
+            if (CombatNouveau.CONFIG.get(ServerConfig.class).shieldKnockback == ServerConfig.ShieldKnockback.VARIABLE) {
+                int variableShieldKnockbackDelay = CombatNouveau.CONFIG.get(ServerConfig.class).variableShieldKnockbackDelay;
+                if (!CombatNouveau.CONFIG.get(ServerConfig.class).removeShieldDelay) {
+                    variableShieldKnockbackDelay += 5;
+                }
+                knockBackStrength = (blockingEntity.getUseItem().getUseDuration(blockingEntity) -
+                        blockingEntity.getUseItemRemainingTicks()) / (double) variableShieldKnockbackDelay;
+                knockBackStrength = 1.0 - Mth.clamp(knockBackStrength, 0.0, 1.0);
+                knockBackStrength += 0.5;
+            } else {
+                knockBackStrength = 0.5;
+            }
+            attackingEntity.knockback(knockBackStrength + blockingEntity.getAttributeValue(Attributes.ATTACK_KNOCKBACK),
+                    blockingEntity.getX() - attackingEntity.getX(),
+                    blockingEntity.getZ() - attackingEntity.getZ());
+        }
+
         return EventResult.PASS;
     }
 }
