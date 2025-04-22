@@ -3,7 +3,7 @@ package fuzs.combatnouveau.handler;
 import fuzs.combatnouveau.CombatNouveau;
 import fuzs.combatnouveau.config.ServerConfig;
 import fuzs.puzzleslib.api.event.v1.core.EventResult;
-import fuzs.puzzleslib.api.event.v1.data.DefaultedDouble;
+import fuzs.puzzleslib.api.event.v1.data.MutableDouble;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -22,12 +22,15 @@ public class ClassicCombatHandler {
         return EventResult.PASS;
     }
 
-    public static EventResult onLivingKnockBack(LivingEntity entity, DefaultedDouble strength, DefaultedDouble ratioX, DefaultedDouble ratioZ) {
+    public static EventResult onLivingKnockBack(LivingEntity livingEntity, MutableDouble knockbackStrength, MutableDouble ratioX, MutableDouble ratioZ) {
         if (!CombatNouveau.CONFIG.get(ServerConfig.class).upwardsKnockback) return EventResult.PASS;
-        if (!entity.onGround() && !entity.isInWater()) {
-            strength.mapDouble(s -> s * (1.0 - entity.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE)));
-            final Vec3 deltaMovement = entity.getDeltaMovement();
-            entity.setDeltaMovement(deltaMovement.x, Math.min(0.4, deltaMovement.y / 2.0D + strength.getAsDouble()), deltaMovement.x);
+        if (!livingEntity.onGround() && !livingEntity.isInWater()) {
+            knockbackStrength.mapDouble((double v) -> v *
+                    (1.0 - livingEntity.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE)));
+            final Vec3 deltaMovement = livingEntity.getDeltaMovement();
+            livingEntity.setDeltaMovement(deltaMovement.x,
+                    Math.min(0.4, deltaMovement.y / 2.0D + knockbackStrength.getAsDouble()),
+                    deltaMovement.x);
         }
         return EventResult.PASS;
     }

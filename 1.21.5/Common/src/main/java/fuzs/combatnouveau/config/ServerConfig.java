@@ -34,14 +34,8 @@ public class ServerConfig implements ConfigCore {
     @Config(category = COOLDOWN_CATEGORY, description = {"Delay in ticks between attacks when holding the attack button is enabled.", "This basically also puts a cap on the max spam clicking speed."})
     @Config.IntRange(min = 0)
     public int holdAttackButtonDelay = 5;
-    @Config(category = ITEMS_CATEGORY, description = "Add a delay of 4 ticks between throwing snowballs or eggs, just like with ender pearls.")
-    public boolean throwablesDelay = true;
     @Config(category = ITEMS_CATEGORY, description = "Eating and drinking both are interrupted if the player is damaged.")
     public boolean eatingInterruption = true;
-    @Config(category = ITEMS_CATEGORY, description = "It only takes 20 ticks to drink liquid foods (such as potions, milk, and bottled liquids) instead of 32 or 40.")
-    public boolean fastDrinking = true;
-    @Config(category = ITEMS_CATEGORY, description = "Only damages axes by 1 durability instead of 2 when attacking so they properly be used as weapons.")
-    public boolean noAxeAttackPenalty = true;
     @Config(category = COOLDOWN_CATEGORY, description = "Attack cooldown is unaffected by switching hotbar items.")
     public boolean fastSwitching = true;
     @Config(category = COOLDOWN_CATEGORY, description = "Melee attacks that don't hit a target won't trigger the attack cooldown.")
@@ -51,16 +45,11 @@ public class ServerConfig implements ConfigCore {
     public double minAttackStrength = 1.0;
     @Config(description = "Disables damage immunity when hit by a projectile. Makes it possible for entities to be hit by multiple projectiles at once (useful for the multishot enchantment).")
     public boolean noProjectileImmunity = true;
-    @Config(category = SHIELD_CATEGORY, description = "Skip 5 tick warm-up delay when activating a shield, so they become effective instantly.")
-    public boolean removeShieldDelay = true;
     @Config(category = SHIELD_CATEGORY, description = {"Shields knock back attackers (see MC-147694).", "NONE: Vanilla behavior, no knockback is dealt to attackers.", "CONSTANT: Always the same knockback is dealth to attackers.", "VARIABLE: The knockback strength is greater the more precisely the shield block is timed in regards to the attack."})
     public ShieldKnockback shieldKnockback = ShieldKnockback.VARIABLE;
     @Config(category = SHIELD_CATEGORY, description = "Amount of ticks after starting to block in which an attacker will be knocked back further than usual when \"shield_knockback\" is set to VARIABLE.")
     @Config.IntRange(min = 0)
     public int variableShieldKnockbackDelay = 20;
-    @Config(category = SHIELD_CATEGORY, description = {"Arc of available protection depending on what angle the attack is coming from and where the player is looking (means the lower this angle the closer you need to be facing your attacker).", "Vanilla protection arc is 180 degrees, which has been reduced to around 100 in combat tests.", "This does not change the protection arc for projectiles which remains at 180 degress."})
-    @Config.DoubleRange(min = 0.0, max = 360.0)
-    public double shieldProtectionArc = 100.0;
 
     public enum ShieldKnockback {
         NONE, CONSTANT, VARIABLE

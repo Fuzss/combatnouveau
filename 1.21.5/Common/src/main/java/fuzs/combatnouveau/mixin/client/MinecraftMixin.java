@@ -7,6 +7,7 @@ import fuzs.combatnouveau.helper.SweepAttackHelper;
 import fuzs.combatnouveau.mixin.client.accessor.MultiPlayerGameModeAccessor;
 import fuzs.combatnouveau.network.client.ServerboundSweepAttackMessage;
 import fuzs.combatnouveau.network.client.ServerboundSwingArmMessage;
+import fuzs.puzzleslib.api.network.v4.MessageSender;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
@@ -65,13 +66,13 @@ abstract class MinecraftMixin {
         if (CombatNouveau.CONFIG.get(ServerConfig.class).retainEnergyOnMiss) {
             // finish executing Minecraft::startAttack without calling a reset on the attack strength ticker
             this.player.swing(InteractionHand.MAIN_HAND, false);
-            CombatNouveau.NETWORK.sendMessage(new ServerboundSwingArmMessage(InteractionHand.MAIN_HAND));
+            MessageSender.broadcast(new ServerboundSwingArmMessage(InteractionHand.MAIN_HAND));
             callback.setReturnValue(false);
         }
         if (CombatNouveau.CONFIG.get(ServerConfig.class).airSweepAttack) {
             if (SweepAttackHelper.isSweepAttackPossible(this.player)) {
                 ((MultiPlayerGameModeAccessor) this.gameMode).combatnouveau$callEnsureHasSentCarriedItem();
-                CombatNouveau.NETWORK.sendMessage(new ServerboundSweepAttackMessage((this.player).isShiftKeyDown()));
+                MessageSender.broadcast(new ServerboundSweepAttackMessage((this.player).isShiftKeyDown()));
                 // possibly blocked by retainEnergyOnMiss option, we want it regardless in case of triggering a sweep attack
                 this.player.resetAttackStrengthTicker();
             }
