@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_17",
+  "package": "${modGroup}.mixin",
+  "mixins": [
+    "EntityMixin",
+    "FoodDataMixin",
+    "PlayerMixin",
+    "ProjectileUtilMixin"
+  ],
+  "client": [
+    "client.ItemStackMixin",
+    "client.LivingEntityMixin",
+    "client.MinecraftMixin",
+    "client.accessor.MultiPlayerGameModeAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
