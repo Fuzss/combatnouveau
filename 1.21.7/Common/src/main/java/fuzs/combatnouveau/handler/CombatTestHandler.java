@@ -4,7 +4,6 @@ import fuzs.combatnouveau.CombatNouveau;
 import fuzs.combatnouveau.config.CommonConfig;
 import fuzs.combatnouveau.config.ServerConfig;
 import fuzs.puzzleslib.api.event.v1.core.EventResult;
-import fuzs.puzzleslib.api.event.v1.data.DefaultedFloat;
 import fuzs.puzzleslib.api.event.v1.data.MutableFloat;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
@@ -45,7 +44,7 @@ public class CombatTestHandler {
         return EventResult.PASS;
     }
 
-    public static EventResult onShieldBlock(LivingEntity blockingEntity, DamageSource damageSource, DefaultedFloat blockedDamage) {
+    public static EventResult onShieldBlock(LivingEntity blockingEntity, DamageSource damageSource, MutableFloat blockedDamage) {
         if (CombatNouveau.CONFIG.get(ServerConfig.class).shieldKnockback == ServerConfig.ShieldKnockback.NONE) {
             return EventResult.PASS;
         }
@@ -56,8 +55,8 @@ public class CombatTestHandler {
                 if (!CombatNouveau.CONFIG.get(CommonConfig.class).removeShieldDelay) {
                     variableShieldKnockbackDelay += 5;
                 }
-                knockBackStrength = (blockingEntity.getUseItem().getUseDuration(blockingEntity) -
-                        blockingEntity.getUseItemRemainingTicks()) / (double) variableShieldKnockbackDelay;
+                knockBackStrength = (blockingEntity.getUseItem().getUseDuration(blockingEntity)
+                        - blockingEntity.getUseItemRemainingTicks()) / (double) variableShieldKnockbackDelay;
                 knockBackStrength = 1.0 - Mth.clamp(knockBackStrength, 0.0, 1.0);
                 knockBackStrength += 0.5;
             } else {

@@ -10,7 +10,7 @@
     "ProjectileUtilMixin"
   ],
   "client": [
-    "client.ItemStackMixin",
+    "client.ItemAttributeModifiers\u0024Display\u0024DefaultMixin",
     "client.LivingEntityMixin",
     "client.MinecraftMixin",
     "client.accessor.MultiPlayerGameModeAccessor"
