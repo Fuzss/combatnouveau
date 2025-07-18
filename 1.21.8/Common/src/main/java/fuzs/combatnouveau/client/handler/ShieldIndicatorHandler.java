@@ -5,7 +5,7 @@ import fuzs.combatnouveau.config.ClientConfig;
 import net.minecraft.client.AttackIndicatorStatus;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceLocation;
@@ -18,17 +18,18 @@ public class ShieldIndicatorHandler {
     @Nullable
     private static AttackIndicatorStatus attackIndicator = null;
 
-    public static void onBeforeRenderGui(Gui gui, GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+    public static void onBeforeRenderGui(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
         if (!CombatNouveau.CONFIG.get(ClientConfig.class).shieldIndicator) return;
-        if (attackIndicator == null && gui.minecraft.player.isBlocking()) {
-            attackIndicator = gui.minecraft.options.attackIndicator().get();
-            gui.minecraft.options.attackIndicator().set(AttackIndicatorStatus.OFF);
+        if (attackIndicator == null && Minecraft.getInstance().player.isBlocking()) {
+            Options options = Minecraft.getInstance().options;
+            attackIndicator = options.attackIndicator().get();
+            options.attackIndicator().set(AttackIndicatorStatus.OFF);
         }
     }
 
-    public static void onAfterRenderGui(Gui gui, GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+    public static void onAfterRenderGui(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
         if (attackIndicator != null) {
-            gui.minecraft.options.attackIndicator().set(attackIndicator);
+            Minecraft.getInstance().options.attackIndicator().set(attackIndicator);
             attackIndicator = null;
         }
     }
