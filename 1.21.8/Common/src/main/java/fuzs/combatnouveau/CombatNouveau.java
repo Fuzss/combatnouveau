@@ -11,6 +11,7 @@ import fuzs.combatnouveau.network.client.ServerboundSweepAttackMessage;
 import fuzs.combatnouveau.network.client.ServerboundSwingArmMessage;
 import fuzs.puzzleslib.api.config.v3.ConfigHolder;
 import fuzs.puzzleslib.api.core.v1.ModConstructor;
+import fuzs.puzzleslib.api.core.v1.context.EntityAttributesContext;
 import fuzs.puzzleslib.api.core.v1.context.PackRepositorySourcesContext;
 import fuzs.puzzleslib.api.core.v1.context.PayloadTypesContext;
 import fuzs.puzzleslib.api.core.v1.utility.ResourceLocationHelper;
@@ -23,6 +24,8 @@ import fuzs.puzzleslib.api.event.v1.entity.player.PlayerTickEvents;
 import fuzs.puzzleslib.api.resources.v1.DynamicPackResources;
 import fuzs.puzzleslib.api.resources.v1.PackResourcesHelper;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,6 +66,13 @@ public class CombatNouveau implements ModConstructor {
         context.addRepositorySource(PackResourcesHelper.buildServerPack(id("halved_sweeping_damage"),
                 DynamicPackResources.create(DynamicDatapackRegistriesProvider::new),
                 true));
+    }
+
+    @Override
+    public void onRegisterEntityAttributes(EntityAttributesContext context) {
+        if (CONFIG.get(CommonConfig.class).doublePlayerAttackStrength) {
+            context.registerAttribute(EntityType.PLAYER, Attributes.ATTACK_DAMAGE, 2.0);
+        }
     }
 
     public static ResourceLocation id(String path) {

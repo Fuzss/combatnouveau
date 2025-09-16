@@ -26,14 +26,13 @@ public class CombatTestHandler {
     }
 
     public static EventResult onLivingHurt(LivingEntity livingEntity, DamageSource damageSource, MutableFloat amount) {
-        if (CombatNouveau.CONFIG.get(ServerConfig.class).eatingInterruption) {
+        ItemUseAnimation itemUseAnimation = livingEntity.getUseItem().getUseAnimation();
+        if (CombatNouveau.CONFIG.get(ServerConfig.class).consumeInterruption.itemUseAnimations.contains(itemUseAnimation)) {
             if (!damageSource.is(DamageTypeTags.BYPASSES_ARMOR)) {
-                ItemUseAnimation useAction = livingEntity.getUseItem().getUseAnimation();
-                if (useAction == ItemUseAnimation.EAT || useAction == ItemUseAnimation.DRINK) {
-                    livingEntity.stopUsingItem();
-                }
+                livingEntity.stopUsingItem();
             }
         }
+
         if (CombatNouveau.CONFIG.get(ServerConfig.class).noProjectileImmunity) {
             if (damageSource.is(DamageTypeTags.IS_PROJECTILE)) {
                 // immediately reset damage immunity after being hit by any projectile, fixes multishot

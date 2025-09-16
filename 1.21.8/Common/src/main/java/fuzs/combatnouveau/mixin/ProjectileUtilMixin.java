@@ -14,20 +14,20 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(ProjectileUtil.class)
 abstract class ProjectileUtilMixin {
 
-    @ModifyVariable(
-            method = "getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;",
+    @ModifyVariable(method = "getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;",
             at = @At("STORE"),
-            ordinal = 1
-    )
+            ordinal = 1)
     private static AABB getEntityHitResult(AABB aabb, @Local(ordinal = 2) Entity entity) {
-        if (!CombatNouveau.CONFIG.get(ServerConfig.class).minHitboxSize) return aabb;
-        double minSize = 0.9;
-        if (entity instanceof LivingEntity && (aabb.getXsize() < minSize || aabb.getYsize() < minSize || aabb.getZsize() < minSize)) {
-            return aabb.inflate(Math.max(0.0, minSize - aabb.getXsize()) / 2.0,
-                    Math.max(0.0, minSize - aabb.getYsize()) / 2.0,
-                    Math.max(0.0, minSize - aabb.getZsize()) / 2.0
-            );
+        double minHitboxSize = CombatNouveau.CONFIG.get(ServerConfig.class).minHitboxSize;
+        if (minHitboxSize == 0.0) {
+            return aabb;
+        } else if (entity instanceof LivingEntity && (aabb.getXsize() < minHitboxSize || aabb.getYsize() < minHitboxSize
+                || aabb.getZsize() < minHitboxSize)) {
+            return aabb.inflate(Math.max(0.0, minHitboxSize - aabb.getXsize()) / 2.0,
+                    Math.max(0.0, minHitboxSize - aabb.getYsize()) / 2.0,
+                    Math.max(0.0, minHitboxSize - aabb.getZsize()) / 2.0);
+        } else {
+            return aabb;
         }
-        return aabb;
     }
 }
