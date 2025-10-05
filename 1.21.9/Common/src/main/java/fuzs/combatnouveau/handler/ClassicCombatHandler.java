@@ -13,7 +13,7 @@ import net.minecraft.world.phys.Vec3;
 public class ClassicCombatHandler {
 
     public static EventResult onProjectileImpact(Projectile projectile, HitResult hitResult) {
-        if (!CombatNouveau.CONFIG.get(ServerConfig.class).weakAttacksKnockBackPlayers) return EventResult.PASS;
+        if (!CombatNouveau.CONFIG.get(ServerConfig.class).weakAttackKnockBack) return EventResult.PASS;
         if (hitResult.getType() == HitResult.Type.ENTITY && projectile.getOwner() == null) {
             // enable knockback for item projectiles fired from dispensers by making shooter not be null
             // something similar is already done in AbstractArrowEntity::onEntityHit to account for arrows fired from dispensers

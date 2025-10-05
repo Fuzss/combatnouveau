@@ -62,8 +62,11 @@ public class CombatNouveau implements ModConstructor {
     @Override
     public void onAddDataPackFinders(PackRepositorySourcesContext context) {
         // need this here so the game does not complain about experimental settings when the config option is disabled
-        if (!CONFIG.get(CommonConfig.class).halveSweepingDamage) return;
-        context.addRepositorySource(PackResourcesHelper.buildServerPack(id("halved_sweeping_damage"),
+        if (!CONFIG.get(CommonConfig.class).halveSweepingDamage) {
+            return;
+        }
+
+        context.registerRepositorySource(PackResourcesHelper.buildServerPack(id("halved_sweeping_damage"),
                 DynamicPackResources.create(DynamicDatapackRegistriesProvider::new),
                 true));
     }

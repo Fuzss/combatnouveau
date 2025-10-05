@@ -36,7 +36,7 @@ abstract class PlayerMixin extends LivingEntity {
     )
     )
     public boolean hurtServer(boolean hurtServer, ServerLevel serverLevel, DamageSource damageSource, float damageAmount) {
-        if (!CombatNouveau.CONFIG.get(ServerConfig.class).weakAttacksKnockBackPlayers) return hurtServer;
+        if (!CombatNouveau.CONFIG.get(ServerConfig.class).weakAttackKnockBack) return hurtServer;
         if (!hurtServer && damageAmount == 0.0F && this.level().getDifficulty() != Difficulty.PEACEFUL) {
             return super.hurtServer(serverLevel, damageSource, damageAmount);
         } else {

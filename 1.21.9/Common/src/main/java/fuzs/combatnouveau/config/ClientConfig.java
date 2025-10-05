@@ -17,8 +17,9 @@ public class ClientConfig implements ConfigCore {
     public boolean specialBaseAttributeModifiers = true;
     @Config(description = "Show a shield indicator similar to the attack indicator when actively blocking.")
     public boolean shieldIndicator = true;
-    @Config(name = "hidden_offhand_items", description = "Items that will not be rendered as being held in first person when placed in the offhand.")
-    List<String> hiddenOffhandItemsRaw = KeyedValueProvider.toString(Registries.ITEM, Items.TOTEM_OF_UNDYING);
+    @Config(name = "hidden_offhand_items",
+            description = "Items that will not be rendered as being held in first person when placed in the offhand.")
+    List<String> hiddenOffhandItemsRaw = KeyedValueProvider.asString(Registries.ITEM, Items.TOTEM_OF_UNDYING);
 
     public ConfigDataSet<Item> hiddenOffhandItems;
 

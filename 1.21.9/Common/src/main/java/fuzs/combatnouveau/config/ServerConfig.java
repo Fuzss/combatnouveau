@@ -17,7 +17,7 @@ public class ServerConfig implements ConfigCore {
     @Config(description = "Health regenerates every 2 seconds, which requires more than 6 food points. Also food points will be directly consumed when healing. Surplus saturation does not yield quick health regeneration.")
     public boolean balancedFoodMechanics = false;
     @Config(description = "Player is knocked back by attacks which do not cause any damage, such as when hit by snowballs, eggs, and fishing rod hooks.")
-    public boolean weakAttacksKnockBackPlayers = true;
+    public boolean weakAttackKnockBack = true;
     @Config(description = "Sprinting and attacking no longer interfere with each other, making critical hits possible at all times.")
     public boolean criticalHitsWhileSprinting = true;
     @Config(description = "Expand all entity hitboxes by 10%, making hitting a target possible from a slightly greater range and with much increased accuracy.")
