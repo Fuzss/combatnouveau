@@ -20,8 +20,11 @@ abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "getAttackAnim", at = @At("TAIL"), cancellable = true)
     public void getAttackAnim(float tickDelta, CallbackInfoReturnable<Float> callback) {
-        if (!CombatNouveau.CONFIG.get(ClientConfig.class).alternativeSwingAnimation) return;
-        final float swingProgress = callback.getReturnValueF();
+        if (!CombatNouveau.CONFIG.get(ClientConfig.class).alternativeSwingAnimation) {
+            return;
+        }
+
+        float swingProgress = callback.getReturnValueF();
         if (swingProgress > 0.4F && swingProgress < 0.95F) {
             callback.setReturnValue(0.4F + 0.6F * (float) Math.pow((swingProgress - 0.4F) / 0.6F, 4.0));
         }

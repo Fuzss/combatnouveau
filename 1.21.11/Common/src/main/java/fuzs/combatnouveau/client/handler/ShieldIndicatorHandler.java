@@ -8,12 +8,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.HumanoidArm;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ShieldIndicatorHandler {
-    public static final ResourceLocation GUI_ICONS_LOCATION = CombatNouveau.id("textures/gui/icons.png");
+    public static final Identifier GUI_ICONS_LOCATION = CombatNouveau.id("textures/gui/icons.png");
 
     @Nullable
     private static AttackIndicatorStatus attackIndicator = null;

@@ -1,0 +1,61 @@
+{
+    "mod": {
+        "id": "combatnouveau",
+        "group": "fuzs.combatnouveau",
+        "name": "Combat Nouveau",
+        "version": "21.11.0",
+        "authors": [
+            "Fuzs"
+        ],
+        "description": "The future of Minecraft combat has arrived! Many tweaks to make your experience more enjoyable.",
+        "license": "MPL-2.0"
+    },
+    "dependencies": [
+        {
+            "name": "fabricapi",
+            "type": "required",
+            "platforms": [
+                "fabric"
+            ]
+        },
+        {
+            "name": "forgeconfigapiport",
+            "type": "required",
+            "platforms": [
+                "fabric"
+            ]
+        },
+        {
+            "name": "puzzleslib",
+            "type": "required",
+            "platforms": [
+                "fabric",
+                "neoforge"
+            ]
+        }
+    ],
+    "links": [
+        {
+            "name": "github",
+            "slug": "combatnouveau"
+        },
+        {
+            "name": "curseforge",
+            "slug": "combat-nouveau",
+            "id": "969425"
+        },
+        {
+            "name": "modrinth",
+            "slug": "combat-nouveau",
+            "id": "Iv3kcKZn"
+        }
+    ],
+    "environments": {
+        "client": "required",
+        "server": "required"
+    },
+    "platforms": [
+        "fabric",
+        "neoforge"
+    ]
+}

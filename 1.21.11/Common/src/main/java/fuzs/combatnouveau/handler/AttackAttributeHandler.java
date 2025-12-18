@@ -6,12 +6,12 @@ import com.google.common.collect.Lists;
 import fuzs.combatnouveau.CombatNouveau;
 import fuzs.combatnouveau.config.CommonConfig;
 import fuzs.puzzleslib.api.config.v3.serialization.ConfigDataSet;
-import fuzs.puzzleslib.api.core.v1.utility.ResourceLocationHelper;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -29,14 +29,14 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class AttackAttributeHandler {
-    public static final ResourceLocation BASE_ENTITY_INTERACTION_RANGE_ID = ResourceLocation.withDefaultNamespace(
+    public static final Identifier BASE_ENTITY_INTERACTION_RANGE_ID = Identifier.withDefaultNamespace(
             "base_entity_interaction_range");
-    public static final Set<ResourceLocation> BASE_ATTRIBUTE_MODIFIER_IDS = Stream.concat(Stream.of(
+    public static final Set<Identifier> BASE_ATTRIBUTE_MODIFIER_IDS = Stream.concat(Stream.of(
                     BASE_ENTITY_INTERACTION_RANGE_ID),
             Arrays.stream(ArmorType.values())
                     .map(ArmorType::getName)
                     .map((String s) -> "armor." + s)
-                    .map(ResourceLocationHelper::withDefaultNamespace)).collect(ImmutableSet.toImmutableSet());
+                    .map(Identifier::withDefaultNamespace)).collect(ImmutableSet.toImmutableSet());
 
     public static void onFinalizeItemComponents(Item item, Consumer<Function<DataComponentMap, DataComponentPatch>> consumer) {
         if (!CombatNouveau.CONFIG.getHolder(CommonConfig.class).isAvailable()) return;
@@ -179,7 +179,7 @@ public class AttackAttributeHandler {
         }
     }
 
-    private static List<ItemAttributeModifiers.Entry> setAttributeValue(Item item, List<ItemAttributeModifiers.Entry> itemAttributeModifiers, Holder<Attribute> attribute, ResourceLocation id, ConfigDataSet<Item> attackDamageOverrides) {
+    private static List<ItemAttributeModifiers.Entry> setAttributeValue(Item item, List<ItemAttributeModifiers.Entry> itemAttributeModifiers, Holder<Attribute> attribute, Identifier id, ConfigDataSet<Item> attackDamageOverrides) {
         if (attackDamageOverrides.contains(item)) {
             double newValue = attackDamageOverrides.<Double>getOptional(item, 0).orElseThrow();
             return setAttributeValue(itemAttributeModifiers, attribute, id, newValue);
@@ -188,7 +188,7 @@ public class AttackAttributeHandler {
         }
     }
 
-    private static List<ItemAttributeModifiers.Entry> setAttributeValue(List<ItemAttributeModifiers.Entry> itemAttributeModifiers, Holder<Attribute> attribute, ResourceLocation id, double newValue) {
+    private static List<ItemAttributeModifiers.Entry> setAttributeValue(List<ItemAttributeModifiers.Entry> itemAttributeModifiers, Holder<Attribute> attribute, Identifier id, double newValue) {
         itemAttributeModifiers = new ArrayList<>(itemAttributeModifiers);
         AttributeModifier attributeModifier = new AttributeModifier(id,
                 newValue,

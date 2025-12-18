@@ -1,6 +1,6 @@
-package fuzs.combatnouveau.fabric.core;
+package fuzs.combatnouveau.fabric.services;
 
-import fuzs.combatnouveau.core.CommonAbstractions;
+import fuzs.combatnouveau.services.CommonAbstractions;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;

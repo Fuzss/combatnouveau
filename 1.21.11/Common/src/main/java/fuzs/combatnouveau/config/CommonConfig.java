@@ -21,10 +21,6 @@ public class CommonConfig implements ConfigCore {
             description = "Only damages axes by 1 durability instead of 2 when attacking so they properly be used as weapons.",
             gameRestart = true)
     public boolean noAxeAttackPenalty = true;
-    @Config(category = ServerConfig.SWEEPING_CATEGORY,
-            description = "Only apply half the sweeping damage to indirectly hit mobs for better balancing of the sweeping feature.",
-            gameRestart = true)
-    public boolean halveSweepingDamage = true;
     @Config(category = ServerConfig.SHIELD_CATEGORY,
             description = "Skip 5 tick warm-up delay when activating a shield, so they become effective instantly.",
             gameRestart = true)

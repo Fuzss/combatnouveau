@@ -1,4 +1,4 @@
-package fuzs.combatnouveau.core;
+package fuzs.combatnouveau.services;
 
 import fuzs.puzzleslib.api.core.v1.ServiceProviderHelper;
 import net.minecraft.world.entity.Entity;
