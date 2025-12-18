@@ -14,13 +14,13 @@ public class CommonConfig implements ConfigCore {
     static final String ENTITY_ATTRIBUTES_CATEGORY = "entity_attributes";
 
     @Config(category = ServerConfig.ITEMS_CATEGORY,
-            description = "Increase snowball and egg stack size from 16 to 64, and potion stack size from 1 to 16 (only for potions of the same type of course).",
+            description = "Increase snowball and egg stack size from 16 to 64, and all potion stack sizes from 1 to 16 (only for potions of the same type of course).",
             gameRestart = true)
     public boolean increaseStackSize = true;
     @Config(category = ServerConfig.ITEMS_CATEGORY,
-            description = "Only damages axes by 1 durability instead of 2 when attacking so they properly be used as weapons.",
+            description = "Only damage tools by 1 durability instead of 2 when attacking. Apply the same logic to swords when harvesting blocks.",
             gameRestart = true)
-    public boolean noAxeAttackPenalty = true;
+    public boolean noItemDurabilityPenalty = true;
     @Config(category = ServerConfig.SHIELD_CATEGORY,
             description = "Skip 5 tick warm-up delay when activating a shield, so they become effective instantly.",
             gameRestart = true)

@@ -3,7 +3,7 @@ package fuzs.combatnouveau;
 import fuzs.combatnouveau.config.ClientConfig;
 import fuzs.combatnouveau.config.CommonConfig;
 import fuzs.combatnouveau.config.ServerConfig;
-import fuzs.combatnouveau.handler.AttackAttributeHandler;
+import fuzs.combatnouveau.handler.ItemComponentsHandler;
 import fuzs.combatnouveau.handler.ClassicCombatHandler;
 import fuzs.combatnouveau.handler.CombatTestHandler;
 import fuzs.combatnouveau.init.ModRegistry;
@@ -45,7 +45,7 @@ public class CombatNouveau implements ModConstructor {
     }
 
     private static void registerEventHandlers() {
-        FinalizeItemComponentsCallback.EVENT.register(AttackAttributeHandler::onFinalizeItemComponents);
+        FinalizeItemComponentsCallback.EVENT.register(ItemComponentsHandler::onFinalizeItemComponents);
         LivingKnockBackCallback.EVENT.register(ClassicCombatHandler::onLivingKnockBack);
         ProjectileImpactCallback.EVENT.register(ClassicCombatHandler::onProjectileImpact);
         PlayerTickEvents.START.register(CombatTestHandler::onStartPlayerTick);

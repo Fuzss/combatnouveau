@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalDoubleRef;
 import fuzs.combatnouveau.CombatNouveau;
 import fuzs.combatnouveau.config.ClientConfig;
-import fuzs.combatnouveau.handler.AttackAttributeHandler;
+import fuzs.combatnouveau.handler.ItemComponentsHandler;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -29,7 +29,7 @@ abstract class ItemAttributeModifiers$Display$DefaultMixin {
         }
 
         if (!isBaseAttributeModifierId && player != null && modifierAmount.get() != 0.0) {
-            if (AttackAttributeHandler.BASE_ATTRIBUTE_MODIFIER_IDS.contains(modifier.id())) {
+            if (ItemComponentsHandler.BASE_ATTRIBUTE_MODIFIER_IDS.contains(modifier.id())) {
                 if (player.getAttribute(attribute) != null) {
                     modifierAmount.set(modifierAmount.get() + player.getAttributeBaseValue(attribute));
                 }

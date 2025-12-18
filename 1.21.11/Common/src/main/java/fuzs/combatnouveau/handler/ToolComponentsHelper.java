@@ -25,8 +25,8 @@ public class ToolComponentsHelper {
 
     private static boolean isToolOrWeapon(DataComponentMap dataComponents, int damagePerBlock, int itemDamagePerAttack) {
         Tool tool = dataComponents.get(DataComponents.TOOL);
-        if (tool != null && tool.damagePerBlock() == damagePerBlock &&
-                tool.canDestroyBlocksInCreative() == itemDamagePerAttack > damagePerBlock) {
+        if (tool != null && tool.damagePerBlock() == damagePerBlock
+                && tool.canDestroyBlocksInCreative() == itemDamagePerAttack > damagePerBlock) {
             Weapon weapon = dataComponents.get(DataComponents.WEAPON);
             return weapon != null && weapon.itemDamagePerAttack() == itemDamagePerAttack;
         }
@@ -34,7 +34,7 @@ public class ToolComponentsHelper {
         return false;
     }
 
-    public static boolean isComponentsForBlocks(DataComponentMap dataComponents, TagKey<Block> tagKey) {
+    public static boolean hasComponentsForBlocks(DataComponentMap dataComponents, TagKey<Block> tagKey) {
         return getToolForBlocks(dataComponents, tagKey) != null;
     }
 
